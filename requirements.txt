@@ -1,1 +1,251 @@
-pytest>=8.0
+DỰ ÁN ITSgrXM - DEMO THUẬT TOÁN CALIFORNIA
+TÀI LIỆU PHÂN CÔNG FILE, YÊU CẦU VÀ LUỒNG CÔNG VIỆC
+
+============================================================
+1. MỤC TIÊU DỰ ÁN
+============================================================
+
+Xây dựng chương trình Python chạy trên Terminal để mô phỏng dữ liệu giao thông, sử dụng thuật toán California để phát hiện sự cố giao thông và đánh giá hiệu quả phát hiện.
+
+Phạm vi hiện tại:
+- Chưa xây dựng giao diện frontend.
+- Dữ liệu có thể là dữ liệu mô phỏng; phải ghi rõ nếu không sử dụng dữ liệu thực tế.
+- Thuật toán và các ngưỡng phải đối chiếu với tài liệu môn học, không tự ý thay đổi.
+- Các thành viên phải thống nhất định dạng dữ liệu và giao diện hàm trước khi tích hợp code.
+
+============================================================
+2. PHÂN CÔNG CHO 5 NGƯỜI
+============================================================
+
+NGƯỜI 1 - THUẬT TOÁN CALIFORNIA
+File chính:
+- src/california.py
+
+Nhiệm vụ:
+- Cài đặt logic phát hiện sự cố theo thuật toán California trong tài liệu môn học.
+- Nhận dữ liệu quan trắc tại hai trạm theo định dạng đã thống nhất.
+- Áp dụng đúng các phép so sánh ngưỡng và điều kiện xác nhận sự cố.
+- Trả về kết quả theo định dạng đã thống nhất để các module khác sử dụng.
+- Xử lý đầu vào không hợp lệ ở mức cần thiết và ghi chú các giả định quan trọng.
+
+Yêu cầu cần đạt:
+- Logic khớp với tài liệu thuật toán được nhóm chọn.
+- Có thể gọi hàm từ module khác mà không cần chạy riêng một chương trình tương tác.
+- Đầu vào, đầu ra và đơn vị đo được mô tả rõ.
+- Không tự tạo ngưỡng hoặc điều kiện chưa được nhóm xác minh.
+
+NGƯỜI 2 - MÔ PHỎNG DỮ LIỆU VÀ THIẾT KẾ HỆ THỐNG
+File chính:
+- src/simulator.py
+- data/README.md
+- docs/system_design.md
+
+Nhiệm vụ:
+- Tạo dữ liệu mô phỏng cho tình huống giao thông bình thường và tình huống có sự cố.
+- Biểu diễn dữ liệu theo chu kỳ thời gian và theo định dạng thống nhất với Người 1.
+- Cung cấp nhãn hoặc thông tin về thời điểm thực sự có sự cố để phục vụ đánh giá.
+- Mô tả dữ liệu mô phỏng, các giả định và cách các module kết nối với nhau.
+
+Yêu cầu cần đạt:
+- Có thể tạo ít nhất một tình huống không có sự cố và một tình huống có sự cố.
+- Dữ liệu có cấu trúc nhất quán, phù hợp với đầu vào của california.py.
+- Có thể tái tạo cùng một bộ dữ liệu khi cần kiểm thử, nếu sử dụng yếu tố ngẫu nhiên thì nên cho phép đặt seed.
+- Nêu rõ dữ liệu là mô phỏng, không trình bày như dữ liệu giao thông thực tế.
+- Tài liệu thiết kế phản ánh đúng cấu trúc chương trình sau khi nhóm thống nhất.
+
+NGƯỜI 3 - ĐÁNH GIÁ HIỆU QUẢ
+File chính:
+- src/metrics.py
+- docs/evaluation.md
+
+Nhiệm vụ:
+- Xác định cách đối chiếu kết quả phát hiện với tình trạng sự cố thực tế trong dữ liệu mô phỏng.
+- Cài đặt các chỉ số được nhóm thống nhất, dự kiến gồm DR, FAR và MTTD nếu dữ liệu đáp ứng yêu cầu.
+- Ghi rõ định nghĩa, công thức, đơn vị và mẫu số của từng chỉ số.
+- Tổng hợp kết quả đánh giá để chương trình chính có thể hiển thị.
+
+Yêu cầu cần đạt:
+- Công thức phải được thống nhất và ghi nguồn hoặc căn cứ theo tài liệu môn học khi có.
+- Phân biệt rõ phát hiện đúng, cảnh báo sai, bỏ sót và trường hợp không có sự cố.
+- Không tính MTTD nếu không xác định được thời điểm bắt đầu sự cố và thời điểm phát hiện.
+- Có cách xử lý hoặc giải thích trường hợp mẫu số bằng 0.
+- docs/evaluation.md nêu phương pháp, giả định và kết quả thực nghiệm thực tế sau khi chạy chương trình; không bịa kết quả trước khi chạy.
+
+NGƯỜI 4 - CHƯƠNG TRÌNH CHÍNH VÀ HƯỚNG DẪN SỬ DỤNG
+File chính:
+- src/main.py
+- README.md
+
+Nhiệm vụ:
+- Xây dựng luồng chạy chương trình và gọi các module theo đúng thứ tự.
+- Nhận dữ liệu từ simulator.py, chuyển dữ liệu qua california.py, sau đó chuyển kết quả và thông tin cần thiết sang metrics.py.
+- In dữ liệu/kết quả cần thiết ra Terminal theo cách dễ đọc.
+- Viết hướng dẫn cài đặt môi trường và chạy chương trình.
+- Không tự cài đặt lại thuật toán California hoặc công thức metrics trong main.py.
+
+Yêu cầu cần đạt:
+- Chương trình có một điểm bắt đầu rõ ràng, dự kiến chạy bằng: python -m src.main
+- Gọi đúng các hàm và định dạng dữ liệu đã thống nhất với Người 1, 2, 3.
+- Có thể chạy một luồng mô phỏng từ đầu đến cuối khi các module đã sẵn sàng.
+- Thông báo lỗi cơ bản đủ rõ để người dùng biết vấn đề nằm ở bước nào.
+- README ghi đúng lệnh cài đặt, lệnh chạy, cấu trúc thư mục và giới hạn của demo.
+
+NGƯỜI 5 - KIỂM THỬ VÀ MÔ TẢ THUẬT TOÁN
+File chính:
+- tests/test_california.py
+- docs/algorithm.md
+
+Nhiệm vụ:
+- Đọc và mô tả thuật toán dựa trên tài liệu môn học mà nhóm sử dụng.
+- Thiết kế ca kiểm thử cho trường hợp bình thường, có sự cố và trường hợp biên.
+- Xác định kết quả mong đợi của từng ca kiểm thử trước khi chạy.
+- Chạy kiểm thử sau khi Người 1 cung cấp giao diện hàm và thuật toán có thể gọi được.
+- Báo lỗi có thể tái hiện, phối hợp với Người 1 để xác minh và sửa.
+
+Yêu cầu cần đạt:
+- Ca kiểm thử có tên rõ ràng, đầu vào và kết quả mong đợi cụ thể.
+- Có kiểm tra trường hợp không có sự cố và có sự cố.
+- Có thể bổ sung trường hợp sát ngưỡng, dữ liệu thiếu hoặc không hợp lệ khi phù hợp với thiết kế.
+- Không viết test chỉ để luôn thành công; kết quả mong đợi phải dựa trên logic và tài liệu đã thống nhất.
+- docs/algorithm.md mô tả đúng các bước, ngưỡng và điều kiện xác nhận theo nguồn đã chọn.
+
+============================================================
+3. CÁC FILE VÀ THƯ MỤC DÙNG CHUNG
+============================================================
+
+requirements.txt
+- Phụ trách: Người 4 kiểm tra và cập nhật khi cần; cả nhóm báo nếu thêm thư viện.
+- Yêu cầu: Chỉ khai báo thư viện cần thiết để cài đặt và chạy dự án. Không thêm thư viện nếu không sử dụng.
+
+.gitignore
+- Phụ trách: Người 4 kiểm tra ban đầu; cả nhóm không tự ý xóa các quy tắc cần thiết.
+- Yêu cầu: Bỏ qua .venv/, __pycache__/, .pytest_cache/, file bytecode và thông tin bí mật như .env nếu có.
+
+src/__init__.py
+- Phụ trách: Người 4 kiểm tra; giữ đơn giản nếu không cần cấu hình bổ sung.
+- Yêu cầu: Cho phép sử dụng src như package Python theo cách nhóm chạy chương trình.
+
+data/
+- Phụ trách: Người 2.
+- Yêu cầu: Lưu dữ liệu mẫu/mô phỏng nếu nhóm quyết định lưu thành file. Không đưa dữ liệu lớn hoặc không rõ nguồn lên repository.
+
+============================================================
+4. CÂY THƯ MỤC VÀ NGƯỜI PHỤ TRÁCH
+============================================================
+
+ITSgrXM/
+|-- README.md                 (Người 4: hướng dẫn cài đặt và chạy)
+|-- requirements.txt          (Người 4 kiểm tra; cả nhóm báo khi thêm thư viện)
+|-- .gitignore                (Người 4 kiểm tra ban đầu)
+|
+|-- data/
+|   `-- README.md             (Người 2: mô tả dữ liệu mô phỏng)
+|
+|-- src/
+|   |-- __init__.py           (Người 4 kiểm tra)
+|   |-- main.py               (Người 4: điều phối chương trình)
+|   |-- california.py         (Người 1: thuật toán California)
+|   |-- simulator.py          (Người 2: mô phỏng giao thông)
+|   `-- metrics.py            (Người 3: chỉ số đánh giá)
+|
+|-- tests/
+|   `-- test_california.py    (Người 5: kiểm thử thuật toán)
+|
+`-- docs/
+    |-- algorithm.md          (Người 5: mô tả thuật toán)
+    |-- system_design.md      (Người 2: thiết kế hệ thống)
+    `-- evaluation.md         (Người 3: phương pháp và kết quả đánh giá)
+
+============================================================
+5. LUỒNG DỮ LIỆU VÀ LUỒNG CÔNG VIỆC
+============================================================
+
+LUỒNG DỮ LIỆU CHÍNH:
+1. simulator.py tạo dữ liệu giao thông theo chu kỳ.
+2. Dữ liệu gồm các giá trị quan trắc cần cho thuật toán và thông tin sự cố thực tế để đánh giá.
+3. california.py đọc dữ liệu quan trắc và xác định trạng thái phát hiện theo thuật toán.
+4. metrics.py so sánh kết quả phát hiện với thông tin sự cố thực tế và tính các chỉ số.
+5. main.py gọi các module theo thứ tự, điều phối chạy và hiển thị kết quả.
+6. test_california.py kiểm thử thuật toán độc lập; sau đó nhóm chạy kiểm thử tích hợp.
+7. Kết quả thực nghiệm được ghi vào docs/evaluation.md và hướng dẫn chạy được cập nhật trong README.md.
+
+LUỒNG PHỤ THUỘC:
+- Trước tiên, cả nhóm thống nhất định dạng dữ liệu, đầu vào/đầu ra của hàm và công thức đánh giá.
+- Người 1 triển khai california.py theo tài liệu đã xác minh.
+- Người 2 phát triển simulator.py song song sau khi thống nhất cấu trúc dữ liệu với Người 1.
+- Người 3 phát triển metrics.py song song sau khi thống nhất định dạng kết quả phát hiện và nhãn sự cố.
+- Người 5 có thể viết mô tả và thiết kế test ngay; hoàn thiện test khi biết giao diện hàm của Người 1.
+- Người 4 chuẩn bị khung main.py ngay; tích hợp hoàn chỉnh sau khi các module có giao diện ổn định.
+- Cả nhóm chạy thử tích hợp, sửa lỗi và chỉ ghi kết quả đánh giá sau khi có kết quả chạy thực tế.
+
+SƠ ĐỒ TÓM TẮT:
+simulator.py (Người 2) ---> dữ liệu quan trắc ---> california.py (Người 1)
+                                                      |
+                                                      v
+                                              kết quả phát hiện
+                                                      |
+                                                      v
+metrics.py (Người 3) <--- nhãn sự cố thực tế từ simulator.py
+       |
+       v
+main.py (Người 4) điều phối và hiển thị kết quả
+
+test_california.py (Người 5) kiểm tra california.py độc lập.
+Sau đó cả nhóm kiểm thử luồng tích hợp từ đầu đến cuối.
+
+============================================================
+6. NHỮNG THỐNG NHẤT PHẢI CÓ TRƯỚC KHI CODE
+============================================================
+
+1. Định dạng dữ liệu:
+   - Tên trường và đơn vị của các giá trị quan trắc.
+   - Chu kỳ lấy mẫu.
+   - Cách biểu diễn nhãn sự cố thực tế.
+   - Cách biểu diễn dữ liệu của hai trạm.
+
+2. Giao diện hàm:
+   - simulator.py tạo dữ liệu ở định dạng nào.
+   - california.py nhận đầu vào nào và trả về đầu ra nào.
+   - metrics.py nhận kết quả phát hiện và nhãn thực tế ra sao.
+   - main.py gọi các hàm theo quy ước nào.
+
+3. Định nghĩa chỉ số:
+   - DR, FAR và MTTD được tính theo định nghĩa nào.
+   - Mẫu số và đơn vị của mỗi chỉ số.
+   - Cách xử lý trường hợp không có sự cố hoặc không có cảnh báo.
+
+4. Thuật toán:
+   - Xác minh các ngưỡng, điều kiện so sánh và xác nhận sự cố từ tài liệu môn học.
+   - Không tự suy đoán hoặc thay đổi thuật toán nếu chưa thống nhất.
+
+============================================================
+7. QUY ƯỚC LÀM VIỆC
+============================================================
+
+- Mỗi người ưu tiên sửa các file được giao.
+- Nếu cần sửa file của người khác, hãy trao đổi trước.
+- Không tự ý đổi tên hàm hoặc định dạng dữ liệu sau khi đã thống nhất.
+- Kiểm tra git status trước khi commit.
+- Không đưa .venv, cache, mật khẩu hoặc file bí mật lên GitHub.
+- Commit nên mô tả đúng nội dung, ví dụ:
+  "Implement California detection logic"
+  "Add traffic simulation data"
+  "Implement evaluation metrics"
+  "Integrate project modules"
+  "Add California algorithm tests"
+- Không ghi kết quả đánh giá chưa chạy thực tế.
+- Người 4 điều phối tích hợp, nhưng mỗi người vẫn chịu trách nhiệm sửa lỗi trong module của mình.
+
+============================================================
+8. TIÊU CHÍ HOÀN THÀNH DỰ ÁN
+============================================================
+
+Dự án được xem là hoàn thành khi:
+- Các module sử dụng cùng định dạng dữ liệu và giao diện hàm.
+- Chương trình chạy được bằng lệnh đã ghi trong README.
+- Có thể mô phỏng ít nhất tình huống bình thường và tình huống có sự cố.
+- Thuật toán trả về kết quả theo logic đã đối chiếu với tài liệu môn học.
+- Các chỉ số đánh giá được tính theo định nghĩa đã thống nhất.
+- Có kiểm thử với kết quả mong đợi rõ ràng.
+- Tài liệu mô tả đúng code thực tế và không ghi kết quả giả định như kết quả thực nghiệm.
+- Repository GitHub không chứa môi trường ảo hoặc file bí mật.
