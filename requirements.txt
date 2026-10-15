@@ -17,7 +17,7 @@ Phạm vi hiện tại:
 2. PHÂN CÔNG CHO 5 NGƯỜI
 ============================================================
 
-NGƯỜI 1 - THUẬT TOÁN CALIFORNIA
+NGƯỜI 1 - THUẬT TOÁN CALIFORNIA ( Khang )
 File chính:
 - src/california.py
 
@@ -34,7 +34,7 @@ Yêu cầu cần đạt:
 - Đầu vào, đầu ra và đơn vị đo được mô tả rõ.
 - Không tự tạo ngưỡng hoặc điều kiện chưa được nhóm xác minh.
 
-NGƯỜI 2 - MÔ PHỎNG DỮ LIỆU VÀ THIẾT KẾ HỆ THỐNG
+NGƯỜI 2 - MÔ PHỎNG DỮ LIỆU VÀ THIẾT KẾ HỆ THỐNG ( Cường )
 File chính:
 - src/simulator.py
 - data/README.md
@@ -53,7 +53,7 @@ Yêu cầu cần đạt:
 - Nêu rõ dữ liệu là mô phỏng, không trình bày như dữ liệu giao thông thực tế.
 - Tài liệu thiết kế phản ánh đúng cấu trúc chương trình sau khi nhóm thống nhất.
 
-NGƯỜI 3 - ĐÁNH GIÁ HIỆU QUẢ
+NGƯỜI 3 - ĐÁNH GIÁ HIỆU QUẢ ( Hiếu )
 File chính:
 - src/metrics.py
 - docs/evaluation.md
@@ -71,7 +71,7 @@ Yêu cầu cần đạt:
 - Có cách xử lý hoặc giải thích trường hợp mẫu số bằng 0.
 - docs/evaluation.md nêu phương pháp, giả định và kết quả thực nghiệm thực tế sau khi chạy chương trình; không bịa kết quả trước khi chạy.
 
-NGƯỜI 4 - CHƯƠNG TRÌNH CHÍNH VÀ HƯỚNG DẪN SỬ DỤNG
+NGƯỜI 4 - CHƯƠNG TRÌNH CHÍNH VÀ HƯỚNG DẪN SỬ DỤNG ( Mai )
 File chính:
 - src/main.py
 - README.md
@@ -90,7 +90,7 @@ Yêu cầu cần đạt:
 - Thông báo lỗi cơ bản đủ rõ để người dùng biết vấn đề nằm ở bước nào.
 - README ghi đúng lệnh cài đặt, lệnh chạy, cấu trúc thư mục và giới hạn của demo.
 
-NGƯỜI 5 - KIỂM THỬ VÀ MÔ TẢ THUẬT TOÁN
+NGƯỜI 5 - KIỂM THỬ VÀ MÔ TẢ THUẬT TOÁN ( Khoa )
 File chính:
 - tests/test_california.py
 - docs/algorithm.md
