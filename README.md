@@ -1,171 +1,143 @@
-# ITSgrXM – Demo thuật toán California phát hiện sự cố giao thông
+# California Traffic Incident Detection System
 
-## 1. Giới thiệu
+## 1. Giới thiệu dự án
 
-ITSgrXM là dự án xây dựng ứng dụng demo thuật toán California trong bài toán phát hiện sự cố giao thông thuộc lĩnh vực Hệ thống giao thông thông minh (Intelligent Transportation Systems – ITS).
+Đây là dự án demo thuật toán California trong bài toán phát hiện sự cố giao thông thuộc lĩnh vực Hệ thống giao thông thông minh (Intelligent Transportation Systems – ITS). Dự án hướng đến mục đích học tập và thuyết trình, với cách tổ chức đơn giản để sinh viên có thể đọc, chạy và mở rộng.
 
-Dự án mô phỏng quá trình tiếp nhận dữ liệu giao thông, xử lý dữ liệu bằng thuật toán California và trả về kết quả nhận diện trạng thái giao thông thông qua giao diện web.
-
-Hệ thống được xây dựng theo mô hình Frontend – Backend, trong đó giao diện người dùng đảm nhiệm việc nhập và hiển thị dữ liệu, còn Backend thực hiện xử lý và chạy thuật toán phát hiện sự cố.
+Phiên bản hiện tại mới thiết lập cấu trúc và phần khung. Chưa có triển khai thuật toán, dữ liệu mẫu hoặc kết quả đánh giá.
 
 ## 2. Mục tiêu dự án
 
-- Tìm hiểu và minh họa nguyên lý hoạt động của thuật toán California.
-- Xây dựng giao diện web đơn giản để tương tác với hệ thống.
-- Xây dựng Backend tiếp nhận và xử lý dữ liệu giao thông.
-- Kết nối Frontend với Backend để thực hiện quá trình phát hiện sự cố.
-- Hiển thị kết quả xử lý nhằm giúp người dùng hiểu cách thuật toán nhận biết trạng thái giao thông bất thường.
+- Tìm hiểu nguyên lý phát hiện sự cố từ dữ liệu các trạm giám sát.
+- Tổ chức chương trình Python chạy trực tiếp trong Terminal.
+- Chuẩn bị nơi lưu dữ liệu, mã nguồn, kiểm thử và tài liệu thiết kế.
+- Tạo nền tảng để sau này kiểm thử và đánh giá hiệu quả phát hiện một cách có thể lặp lại.
 
-## 3. Chức năng chính
+## 3. Phạm vi thực hiện
 
-### 3.1. Frontend (FE)
+Trong giai đoạn khởi tạo, dự án chỉ cung cấp cấu trúc thư mục, tài liệu và khung mã nguồn. Chưa cài đặt logic thuật toán California, bộ mô phỏng dữ liệu, phép tính các chỉ số đánh giá hoặc bộ dữ liệu đầu vào.
 
-- Cung cấp giao diện tương tác với người dùng.
-- Cho phép gửi dữ liệu đầu vào theo chức năng đã triển khai.
-- Gửi yêu cầu xử lý đến Backend.
-- Hiển thị kết quả do Backend trả về.
+Đây là ứng dụng Python chạy cục bộ. Dự án không có Frontend, Backend riêng, API server hay giao diện web.
 
-### 3.2. Backend (BE)
+## 4. Nguyên lý hoạt động tổng quát
 
-- Tiếp nhận yêu cầu từ Frontend.
-- Xử lý dữ liệu đầu vào.
-- Thực thi thuật toán California theo các điều kiện được cấu hình.
-- Trả kết quả xử lý về Frontend.
+Khi được triển khai, chương trình dự kiến đọc dữ liệu OCC tại trạm phía thượng lưu (`OCC_up`) và trạm phía hạ lưu (`OCC_down`), kiểm tra tính hợp lệ, áp dụng đúng các điều kiện và ngưỡng của thuật toán California, rồi xuất trạng thái giao thông. Kết quả sẽ được đối chiếu với nhãn sự cố đã biết để tính các chỉ số đánh giá.
 
-### 3.3. Thuật toán California
+Đây chỉ là luồng khái quát, không thay thế công thức hoặc thứ tự kiểm tra của tài liệu bài giảng. Các ngưỡng T1, T2, T3, điều kiện xác nhận qua chu kỳ tiếp theo và điều kiện kết thúc sự cố cần được xác minh trước khi triển khai. Xem [docs/algorithm.md](docs/algorithm.md).
 
-Thuật toán California được sử dụng để minh họa việc phát hiện trạng thái giao thông bất thường dựa trên các thông số giao thông và điều kiện ngưỡng.
+## 5. Công nghệ sử dụng
 
-Về nguyên lý tổng quát, hệ thống kiểm tra dữ liệu giao thông, so sánh với các điều kiện phát hiện đã thiết lập và đưa ra kết quả tương ứng.
+- Python 3.10 trở lên.
+- `pytest` để tổ chức và chạy kiểm thử.
+- Thư viện chuẩn Python cho phần khung ban đầu.
 
-Các thông số đầu vào, giá trị ngưỡng và điều kiện phát hiện cụ thể phụ thuộc vào phần cài đặt thực tế của thuật toán trong dự án.
+`pytest` là phụ thuộc phát triển/kiểm thử duy nhất hiện được khai báo. Chưa cần `pandas` vì chưa có mã đọc hoặc xử lý CSV; chỉ bổ sung nếu triển khai thực tế cần đến.
 
-## 4. Công nghệ và kiến trúc hệ thống
-
-Dự án sử dụng kiến trúc Frontend – Backend:
-
-```text
-+---------------------------+
-|         Frontend          |
-|    Giao diện người dùng   |
-+-------------+-------------+
-              |
-              | Gửi yêu cầu
-              v
-+---------------------------+
-|          Backend          |
-| Tiếp nhận và xử lý dữ liệu|
-+-------------+-------------+
-              |
-              v
-+---------------------------+
-|    Thuật toán California  |
-|   Phát hiện bất thường    |
-+-------------+-------------+
-              |
-              | Trả kết quả
-              v
-+---------------------------+
-|         Frontend          |
-|     Hiển thị kết quả      |
-+---------------------------+
-```
-
-Công nghệ và framework cụ thể của FE, BE sẽ được cập nhật theo các thư viện thực tế trong repository.
-
-## 5. Quy trình hoạt động
-
-1. Người dùng truy cập giao diện Frontend.
-2. Người dùng nhập hoặc lựa chọn dữ liệu giao thông theo chức năng được hỗ trợ.
-3. Frontend gửi dữ liệu đến Backend.
-4. Backend tiếp nhận và xử lý dữ liệu đầu vào.
-5. Thuật toán California kiểm tra dữ liệu theo các điều kiện đã cấu hình.
-6. Backend trả kết quả phát hiện về Frontend.
-7. Frontend hiển thị kết quả cho người dùng.
-
-## 6. Hướng dẫn cài đặt và sử dụng
-
-### 6.1. Yêu cầu hệ thống
-
-Cần chuẩn bị:
-
-- Git để tải mã nguồn từ GitHub.
-- Môi trường chạy phù hợp với công nghệ được sử dụng trong dự án.
-- Các thư viện và gói phụ thuộc của Frontend và Backend.
-
-### 6.2. Clone project về máy
-
-Mở Terminal, CMD, PowerShell hoặc Git Bash tại thư mục muốn lưu project.
-
-Ví dụ, muốn lưu project tại `D:\Projects`, hãy mở Terminal tại thư mục đó rồi chạy:
-
-```bash
-git clone https://github.com/xuan-mai-pyn/ITSgrXM.git
-```
-
-Di chuyển vào thư mục project:
-
-```bash
-cd ITSgrXM
-```
-
-Kiểm tra trạng thái Git:
-
-```bash
-git status
-```
-
-Nếu Git hiển thị nhánh hiện tại và trạng thái làm việc, bạn có thể tiếp tục các bước cài đặt.
-
-### 6.3. Mở project bằng VS Code
-
-Nếu đã cài Visual Studio Code và lệnh `code` hoạt động, chạy:
-
-```bash
-code .
-```
-
-Có thể mở trực tiếp thư mục `ITSgrXM` bằng chức năng **File → Open Folder** trong VS Code.
-
-### 6.4. Cài đặt các thư viện
-
-Cài đặt các thư viện cần thiết theo cấu hình của từng phần:
-
-- Frontend: dựa trên file quản lý gói và hướng dẫn của framework FE.
-- Backend: dựa trên file khai báo thư viện và hướng dẫn của môi trường BE.
-
-Tên framework, lệnh cài đặt và lệnh chạy cụ thể cần được bổ sung theo cấu trúc thực tế của dự án.
-
-### 6.5. Khởi chạy hệ thống
-
-Khởi động Backend và Frontend theo hướng dẫn tương ứng của từng phần.
-
-Sau khi hai phần hoạt động, truy cập địa chỉ Frontend được hiển thị trong Terminal để sử dụng giao diện demo.
-
-## 7. Cấu trúc thư mục
-
-Cấu trúc thư mục dưới đây mang tính minh họa. Tên thư mục cần được điều chỉnh theo repository thực tế.
+## 6. Cấu trúc thư mục và chức năng từng thành phần
 
 ```text
 ITSgrXM/
-├── frontend/       # Mã nguồn giao diện
-├── backend/        # Mã nguồn xử lý và thuật toán
-└── README.md       # Tài liệu dự án
+├── README.md
+├── requirements.txt
+├── .gitignore
+├── data/
+│   └── README.md
+├── src/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── california.py
+│   ├── simulator.py
+│   └── metrics.py
+├── tests/
+│   └── test_california.py
+└── docs/
+    ├── algorithm.md
+    ├── system_design.md
+    └── evaluation.md
 ```
 
-## 8. Phạm vi và hạn chế
+- `src/main.py`: điểm vào chương trình Terminal; hiện chỉ thông báo phần xử lý chưa được triển khai.
+- `src/california.py`: vị trí dành cho logic thuật toán California.
+- `src/simulator.py`: vị trí dành cho mô phỏng/chuẩn bị dữ liệu khi có đặc tả phù hợp; chưa sinh dữ liệu.
+- `src/metrics.py`: vị trí dành cho các chỉ số đánh giá; chưa tính chỉ số.
+- `data/`: hướng dẫn cách tổ chức dữ liệu, không chứa dữ liệu giả hoặc dữ liệu thực tế trong phiên bản này.
+- `tests/`: kiểm thử thuật toán; kiểm thử California hiện được đánh dấu bỏ qua cho đến khi có đặc tả và mã triển khai.
+- `docs/`: tài liệu nguyên lý, thiết kế hệ thống và kế hoạch đánh giá.
 
-Đây là dự án demo phục vụ mục đích học tập và minh họa thuật toán phát hiện sự cố giao thông.
+## 7. Yêu cầu cài đặt
 
-Kết quả phụ thuộc vào dữ liệu đầu vào, các ngưỡng phát hiện và cách thuật toán được triển khai. Hệ thống chưa được mặc định là giải pháp có thể triển khai trực tiếp trong môi trường giao thông thực tế.
+- Python 3.10 trở lên và `pip`.
+- Terminal, PowerShell hoặc Command Prompt.
+- Git là tùy chọn nếu bạn cần quản lý mã nguồn theo phiên bản.
 
-Để ứng dụng thực tế, cần đánh giá thuật toán trên dữ liệu giao thông phù hợp, hiệu chỉnh ngưỡng và kiểm tra độ chính xác của kết quả.
+## 8. Hướng dẫn thiết lập môi trường Python
 
-## 9. Hướng phát triển
+Tại thư mục gốc dự án, tạo môi trường ảo:
 
-- Bổ sung dữ liệu giao thông thực tế hoặc dữ liệu mô phỏng đa dạng hơn.
-- Cải thiện cách hiển thị kết quả phát hiện.
-- Cho phép cấu hình các ngưỡng phát hiện.
-- Xây dựng bộ dữ liệu kiểm thử để đánh giá thuật toán.
-- So sánh thuật toán California với các phương pháp phát hiện sự cố khác.
-- Nâng cao khả năng xử lý lỗi và kết nối giữa Frontend và Backend.
+```bash
+python -m venv .venv
+```
+
+Kích hoạt môi trường trên Windows (PowerShell):
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Trên Windows (Command Prompt):
+
+```bat
+.venv\Scripts\activate.bat
+```
+
+Trên macOS/Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+## 9. Hướng dẫn cài đặt thư viện
+
+Sau khi kích hoạt môi trường ảo:
+
+```bash
+pip install -r requirements.txt
+```
+
+Tệp phụ thuộc hiện chỉ có `pytest`, phục vụ kiểm thử. Không cần cài thư viện xử lý dữ liệu hoặc giao diện cho phần khung hiện tại.
+
+## 10. Hướng dẫn chạy chương trình khi phần mã nguồn đã được triển khai
+
+Từ thư mục gốc repository:
+
+```bash
+python -m src.main
+```
+
+Hiện lệnh này chỉ hiển thị thông báo rằng thuật toán chưa được triển khai. Luồng phát hiện sự cố đầy đủ chỉ hoạt động sau khi hoàn thành việc đọc/kiểm tra dữ liệu và cài đặt thuật toán theo tài liệu đã xác minh.
+
+## 11. Hướng dẫn chạy kiểm thử
+
+Sau khi cài phụ thuộc, chạy từ thư mục gốc:
+
+```bash
+pytest
+```
+
+Kiểm thử California hiện là khung được bỏ qua, chưa kiểm tra khả năng phát hiện. Bộ kiểm thử chỉ có thể đánh giá đầy đủ hành vi sau khi thuật toán và các trường hợp kiểm thử được triển khai. Không xem việc thu thập hoặc bỏ qua kiểm thử khung là bằng chứng thuật toán hoạt động đúng.
+
+## 12. Hướng phát triển tiếp theo
+
+1. Bổ sung tài liệu bài giảng/đặc tả gốc, xác minh công thức và thứ tự điều kiện của California.
+2. Chốt định dạng dữ liệu, đơn vị OCC, khoảng thời gian lấy mẫu và quy ước nhãn sự cố.
+3. Triển khai kiểm tra dữ liệu và thuật toán có xử lý dữ liệu thiếu/không hợp lệ.
+4. Bổ sung dữ liệu kiểm thử có nguồn gốc, nhãn tham chiếu và kiểm thử các tình huống biên.
+5. Tính DR, FAR, TTD theo định nghĩa đã thống nhất và báo cáo kết quả thực nghiệm có thể tái lập.
+
+## 13. Giới hạn của phiên bản demo
+
+- Chưa triển khai thuật toán California và chưa xác minh ngưỡng T1, T2, T3.
+- Chưa có dữ liệu đầu vào; không có kết quả thực nghiệm.
+- Chưa triển khai mô phỏng, đánh giá hoặc xử lý dữ liệu.
+- Chưa thể dùng cho giám sát giao thông thực tế hay ra quyết định vận hành.
+- Các lệnh chạy/kiểm thử mới chỉ chạy phần khung tương ứng; chúng không chứng minh hệ thống phát hiện sự cố đã hoàn chỉnh.
