@@ -13,6 +13,11 @@ Phạm vi hiện tại:
 - Thuật toán và các ngưỡng phải đối chiếu với tài liệu môn học, không tự ý thay đổi.
 - Các thành viên phải thống nhất định dạng dữ liệu và giao diện hàm trước khi tích hợp code.
 
+Bổ sung phạm vi frontend:
+- Người 1 phụ trách bổ sung frontend độc lập trong thư mục fe/ theo yêu cầu tại mục phân công bên dưới.
+- Frontend dùng dữ liệu mẫu được khai báo rõ ràng, chưa kết nối backend và không trình bày dữ liệu minh họa như kết quả thực nghiệm.
+- Nội dung "Chưa xây dựng giao diện frontend" ở trên mô tả phạm vi ban đầu; phần bổ sung này cập nhật nhiệm vụ frontend cho Người 1.
+
 ============================================================
 2. PHÂN CÔNG CHO 5 NGƯỜI
 ============================================================
@@ -33,6 +38,28 @@ Yêu cầu cần đạt:
 - Có thể gọi hàm từ module khác mà không cần chạy riêng một chương trình tương tác.
 - Đầu vào, đầu ra và đơn vị đo được mô tả rõ.
 - Không tự tạo ngưỡng hoặc điều kiện chưa được nhóm xác minh.
+
+Nhiệm vụ bổ sung - FRONTEND:
+- Xây dựng frontend độc lập trong thư mục fe/ bằng HTML, CSS và JavaScript thuần; không dùng React, Vue, Angular hoặc framework frontend khác.
+- Không sửa code backend, thuật toán California, simulator, metrics, tests, requirements.txt, README.md ở thư mục gốc, docs/ hoặc data/ khi triển khai frontend.
+- Chưa kết nối API/backend; không import hoặc phụ thuộc vào module Python. Dữ liệu frontend phải là dữ liệu mẫu được khai báo rõ ràng và không được mô tả là kết quả thực nghiệm thật.
+- Tổ chức phần đọc dữ liệu để có thể thay bằng adapter/API trong tương lai mà không phải viết lại giao diện.
+- Các đường dẫn giữa trang, CSS và JavaScript phải hoạt động khi mở frontend độc lập; nút giao diện phải có hành vi thực tế.
+- Giao diện thống nhất, dễ đọc, phù hợp hệ thống giao thông thông minh và hỗ trợ màn hình máy tính lẫn điện thoại.
+
+Các file Người 1 phụ trách trong fe/:
+- fe/index.html: Trang giới thiệu ITSgrXM, tóm tắt demo phát hiện sự cố giao thông bằng thuật toán California và có liên kết đến Dashboard.
+- fe/pages/dashboard.html: Trang tổng quan, hiển thị trạng thái mô phỏng, số sự cố trong dữ liệu mẫu, Detection Rate, False Alarm Rate, Mean Time to Detect và biểu đồ hoặc bảng tóm tắt dữ liệu giao thông.
+- fe/pages/simulation.html: Trang mô phỏng occupancy của hai trạm, trạng thái bình thường hoặc trạng thái mẫu có dấu hiệu sự cố, cùng các nút bắt đầu, tạm dừng và đặt lại. Mô phỏng chỉ phát lại dữ liệu mẫu phía frontend.
+- fe/pages/evaluation.html: Trang trình bày Detection Rate, False Alarm Rate, Mean Time to Detect và giải thích ý nghĩa các chỉ số; phải ghi rõ giá trị dùng để minh họa, không phải kết quả thực nghiệm nếu chưa chạy đánh giá.
+- fe/assets/css/style.css: Chứa CSS dùng chung cho toàn bộ frontend; giao diện nhất quán và responsive, không rải CSS trong HTML nếu không cần thiết.
+- fe/assets/js/app.js: Xử lý điều hướng/menu và tương tác giao diện dùng chung; cập nhật nội dung và trạng thái các nút khi cần.
+- fe/assets/js/data.js: Khai báo dữ liệu mẫu chỉ dùng cho frontend, đánh dấu rõ nguồn dữ liệu; không giả định dữ liệu do backend cung cấp.
+- fe/assets/js/charts.js: Hiển thị biểu đồ bằng HTML/CSS/JavaScript thuần hoặc SVG. Nếu dùng thư viện bên ngoài thì phải nêu lý do; không tự cài đặt hoặc thay đổi cấu hình backend.
+- fe/assets/images/.gitkeep: Giữ thư mục images trong Git khi chưa có hình ảnh.
+- fe/README.md: Hướng dẫn mở/chạy frontend độc lập, liệt kê cấu trúc thư mục, giải thích nguồn dữ liệu mẫu và nêu rõ frontend chưa kết nối backend.
+- Frontend có thanh điều hướng đến Dashboard, Simulation và Evaluation; dùng đường dẫn tài nguyên chính xác và không cần khởi động Python backend.
+- Không tạo nút chỉ để trang trí; không dùng dữ liệu mẫu để khẳng định thuật toán California phát hiện sự cố chính xác.
 
 NGƯỜI 2 - MÔ PHỎNG DỮ LIỆU VÀ THIẾT KẾ HỆ THỐNG ( Cường )
 File chính:
@@ -155,6 +182,25 @@ ITSgrXM/
     |-- algorithm.md          (Người 5: mô tả thuật toán)
     |-- system_design.md      (Người 2: thiết kế hệ thống)
     `-- evaluation.md         (Người 3: phương pháp và kết quả đánh giá)
+
+Bổ sung thư mục frontend do Người 1 phụ trách:
+
+|-- fe/
+|   |-- index.html                 (Người 1: trang giới thiệu frontend)
+|   |-- README.md                  (Người 1: hướng dẫn chạy và mô tả dữ liệu mẫu)
+|   |-- assets/
+|   |   |-- css/
+|   |   |   `-- style.css          (Người 1: CSS dùng chung, responsive)
+|   |   |-- js/
+|   |   |   |-- app.js             (Người 1: điều hướng và tương tác giao diện)
+|   |   |   |-- data.js            (Người 1: dữ liệu mẫu frontend)
+|   |   |   `-- charts.js          (Người 1: hiển thị biểu đồ)
+|   |   `-- images/
+|   |       `-- .gitkeep           (Người 1: giữ thư mục ảnh trong Git)
+|   `-- pages/
+|       |-- dashboard.html         (Người 1: trang tổng quan)
+|       |-- simulation.html        (Người 1: trang mô phỏng dữ liệu mẫu)
+|       `-- evaluation.html        (Người 1: trang chỉ số đánh giá mẫu)
 
 ============================================================
 5. LUỒNG DỮ LIỆU VÀ LUỒNG CÔNG VIỆC

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1724">
+  <title>Simulation | ITSgrXM</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script defer src="../assets/js/data.js"></script>
+  <script defer src="../assets/js/charts.js"></script>
+  <script defer src="../assets/js/app.js"></script>
+</head>
+<body data-page="simulation">
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="ITSgrXM - Trang chủ"><span class="brand-mark" aria-hidden="true">IT</span><span class="brand-copy"><strong>ITSgrXM</strong><small>Intelligent Traffic System</small></span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Mở menu"><span></span><span></span><span></span></button>
+    <nav class="site-nav" id="site-nav" aria-label="Điều hướng chính"><a href="dashboard.html">Dashboard</a><a href="simulation.html" aria-current="page">Simulation</a><a href="evaluation.html">Evaluation</a></nav>
+  </header>
+  <main class="page-shell">
+    <div class="page-heading">
+      <div><span class="eyebrow">MÔ PHỎNG PHÍA TRÌNH DUYỆT</span><h1>Simulation</h1><p>Quan sát occupancy mẫu tại hai trạm và điều khiển lần phát lại.</p></div>
+      <span class="status-pill status-neutral" data-simulation-status><span class="status-dot"></span> ĐANG TẠM DỪNG</span>
+    </div>
+    <div class="sample-banner"><span class="banner-icon">ⓘ</span><p><strong>Chỉ là dữ liệu mô phỏng:</strong> trạng thái được gắn sẵn trong bộ mẫu frontend. Màn hình này không gọi backend và không đánh giá thuật toán California.</p></div>
+
+    <section class="simulation-toolbar panel">
+      <div><span class="eyebrow">PHÁT LẠI DỮ LIỆU MẪU</span><h2>Điều khiển mô phỏng</h2><p>Mỗi bước cập nhật theo chuỗi mẫu cố định.</p></div>
+      <div class="button-group">
+        <button class="button button-primary" type="button" data-simulation-start>▶ <span>Bắt đầu</span></button>
+        <button class="button button-secondary" type="button" data-simulation-pause disabled>Ⅱ <span>Tạm dừng</span></button>
+        <button class="button button-quiet" type="button" data-simulation-reset>↺ <span>Đặt lại</span></button>
+      </div>
+    </section>
+    <div class="simulation-readings">
+      <article class="station-card panel">
+        <div class="station-card-heading"><div><span class="station-id">STATION A</span><h2>Trạm A · Tuyến Bắc</h2></div><span class="station-indicator" data-station-state="A">Bình thường</span></div>
+        <div class="reading"><span>Occupancy hiện tại</span><strong data-occupancy="A">—<small>%</small></strong></div>
+        <div class="meter"><span data-meter="A"></span></div>
+        <div class="station-meta"><span>Đọc từ dữ liệu mẫu</span><span data-station-time="A">Mẫu 01</span></div>
+      </article>
+      <article class="station-card panel">
+        <div class="station-card-heading"><div><span class="station-id">STATION B</span><h2>Trạm B · Tuyến Nam</h2></div><span class="station-indicator" data-station-state="B">Bình thường</span></div>
+        <div class="reading"><span>Occupancy hiện tại</span><strong data-occupancy="B">—<small>%</small></strong></div>
+        <div class="meter"><span data-meter="B"></span></div>
+        <div class="station-meta"><span>Đọc từ dữ liệu mẫu</span><span data-station-time="B">Mẫu 01</span></div>
+      </article>
+    </div>
+    <section class="panel chart-panel simulation-chart-panel">
+      <div class="panel-heading"><div><span class="eyebrow">OCCUPANCY TIMELINE</span><h2>Diễn biến occupancy</h2></div><span class="legend"><i class="legend-dot legend-a"></i> Trạm A <i class="legend-dot legend-b"></i> Trạm B</span></div>
+      <div class="chart-wrap" data-chart="simulation"><p class="chart-fallback">Biểu đồ occupancy mẫu sẽ hiển thị tại đây.</p></div>
+      <div class="chart-axis"><span>Mẫu theo thời gian</span><span>Occupancy (%)</span></div>
+    </section>
+    <p class="footnote">Nhãn “Có dấu hiệu sự cố” mô tả trạng thái khai báo sẵn trong dữ liệu minh họa, không phải kết luận của thuật toán.</p>
+  </main>
+  <footer class="site-footer"><span>ITSgrXM · Frontend demo</span><span>Chưa kết nối backend</span></footer>
+</body>
+</html>

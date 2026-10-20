@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1724">
+  <meta name="description" content="Giao diện frontend độc lập giới thiệu demo ITSgrXM phát hiện sự cố giao thông bằng thuật toán California.">
+  <title>ITSgrXM | Giám sát giao thông thông minh</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script defer src="assets/js/data.js"></script>
+  <script defer src="assets/js/app.js"></script>
+</head>
+<body class="landing-page">
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="ITSgrXM - Trang chủ">
+      <span class="brand-mark" aria-hidden="true">IT</span>
+      <span class="brand-copy"><strong>ITSgrXM</strong><small>Intelligent Traffic System</small></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Mở menu">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="Điều hướng chính">
+      <a href="pages/dashboard.html">Dashboard</a>
+      <a href="pages/simulation.html">Simulation</a>
+      <a href="pages/evaluation.html">Evaluation</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="live-dot"></span> GIAO THÔNG THÔNG MINH · DEMO</span>
+        <h1>Phát hiện sự cố.<br><span>Phản ứng kịp thời.</span></h1>
+        <p>ITSgrXM minh họa cách thuật toán California có thể được dùng trong bài toán phát hiện sự cố giao thông. Khám phá bảng điều khiển, dữ liệu mô phỏng và các chỉ số đánh giá mẫu.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="pages/dashboard.html">Khám phá Dashboard <span aria-hidden="true">→</span></a>
+          <a class="button button-quiet" href="pages/simulation.html">Xem mô phỏng</a>
+        </div>
+        <p class="notice-inline"><span aria-hidden="true">ⓘ</span> Đây là frontend độc lập dùng dữ liệu minh họa, chưa kết nối backend.</p>
+      </div>
+      <div class="hero-visual" aria-label="Minh họa các trạm giám sát giao thông">
+        <div class="visual-topline"><span>NETWORK OVERVIEW</span><span class="status-pill status-neutral">DEMO MODE</span></div>
+        <div class="road-scene">
+          <div class="road-label road-label-a">STATION A <span>●</span></div>
+          <div class="road-label road-label-b">STATION B <span>●</span></div>
+          <div class="road">
+            <div class="road-lane"><i class="car car-one"></i><i class="car car-two"></i></div>
+            <div class="road-center"></div>
+            <div class="road-lane"><i class="car car-three"></i></div>
+          </div>
+          <div class="station-line station-line-a"></div>
+          <div class="station-line station-line-b"></div>
+          <div class="map-point map-point-a"></div>
+          <div class="map-point map-point-b"></div>
+          <div class="map-grid" aria-hidden="true"></div>
+        </div>
+        <div class="visual-footer"><span>● SAMPLE NETWORK</span><span>2 monitored stations</span></div>
+      </div>
+    </section>
+
+    <section class="landing-bottom">
+      <div>
+        <span class="eyebrow">KHÁM PHÁ GIAO DIỆN</span>
+        <h2>Một góc nhìn tổng quan về hệ thống</h2>
+      </div>
+      <div class="feature-grid">
+        <a class="feature-card" href="pages/dashboard.html">
+          <span class="feature-icon">▦</span><span class="feature-arrow">↗</span>
+          <h3>Dashboard</h3><p>Tổng hợp trạng thái mẫu, sự cố minh họa và chỉ số đánh giá.</p>
+        </a>
+        <a class="feature-card" href="pages/simulation.html">
+          <span class="feature-icon">⌁</span><span class="feature-arrow">↗</span>
+          <h3>Simulation</h3><p>Theo dõi occupancy mẫu tại hai trạm và điều khiển mô phỏng.</p>
+        </a>
+        <a class="feature-card" href="pages/evaluation.html">
+          <span class="feature-icon">◷</span><span class="feature-arrow">↗</span>
+          <h3>Evaluation</h3><p>Tìm hiểu các chỉ số mẫu và ý nghĩa của từng phép đo.</p>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><span>ITSgrXM · Frontend demo</span><span>Giao diện minh họa, không đại diện kết quả thực nghiệm.</span></footer>
+</body>
+</html>
