@@ -3,12 +3,13 @@
 TODO: Bổ sung đặc tả bài giảng đã xác minh trước khi triển khai công thức,
 ngưỡng, thứ tự kiểm tra và trạng thái xác nhận/kết thúc sự cố.
 """
+
+from __future__ import annotations
+
 """
 Thuật toán California (California Algorithm #8) phát hiện sự cố giao thông.
 Người phụ trách: Khang (Người 1)
 """
-
-from __future__ import annotations
 
 class CaliforniaAlgorithm:
     """Thuật toán phát hiện sự cố giao thông California Algorithm #7.
