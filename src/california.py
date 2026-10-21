@@ -8,57 +8,67 @@ Thuật toán California (California Algorithm #8) phát hiện sự cố giao t
 Người phụ trách: Khang (Người 1)
 """
 
-def detect_incident(occ_up: float, occ_down: float, thresholds: dict = None) -> bool:
+from __future__ import annotations
+
+class CaliforniaAlgorithm:
+    """Thuật toán phát hiện sự cố giao thông California Algorithm #7.
+
+    Sử dụng chênh lệch Occupancy giữa trạm thượng lưu (upstream) và 
+    trạm hạ lưu (downstream) để phát hiện sự cố.
     """
-    Hàm thực thi thuật toán California phát hiện sự cố giao thông dựa trên độ chiếm dòng (Occupancy).
-    
-    Parameters:
-    - occ_up (float): Độ chiếm dòng tại trạm thượng lưu (Upstream - OCC_up).
-    - occ_down (float): Độ chiếm dòng tại trạm hạ lưu (Downstream - OCC_down).
-    - thresholds (dict): Bộ các ngưỡng T1, T2, T3 theo tài liệu môn học. 
-                         Nếu không truyền vào, sẽ dùng giá trị mặc định tiêu chuẩn.
-                         
-    Returns:
-    - bool: True nếu phát hiện sự cố, False nếu giao thông bình thường.
-    """
-    # Các giá trị ngưỡng mặc định (có thể điều chỉnh theo tài liệu môn học cụ thể của nhóm)
-    if thresholds is None:
-        thresholds = {
-            "T1": 8.0,   # Ngưỡng chênh lệch tuyệt đối giữa trạm trên và trạm dưới (OCC_up - OCC_down)
-            "T2": 0.5,   # Ngưỡng tỷ lệ chênh lệch (OCC_up - OCC_down) / OCC_up
-            "T3": 2.0    # Ngưỡng giảm độ chiếm dòng tại trạm hạ lưu hoặc điều kiện phụ trợ
-        }
-        
-    t1 = thresholds.get("T1", 8.0)
-    t2 = thresholds.get("T2", 0.5)
-    t3 = thresholds.get("T3", 2.0)
-    
-    # Kiểm tra xử lý đầu vào không hợp lệ cơ bản
-    if occ_up is None or occ_down is None or occ_up < 0 or occ_down < 0:
-        return False
 
-    # Logic thuật toán California cơ bản (Thuật toán số 8):
-    # Điều kiện 1: Độ chênh lệch tuyệt đối giữa thượng lưu và hạ lưu vượt ngưỡng T1
-    cond1 = (occ_up - occ_down) > t1
-    
-    # Điều kiện 2: Tỷ lệ chênh lệch tương đối vượt ngưỡng T2
-    # Tránh lỗi chia cho 0 bằng cách kiểm tra occ_up > 0
-    cond2 = False
-    if occ_up > 0:
-        cond2 = ((occ_up - occ_down) / occ_up) > t2
-        
-    # Điều kiện 3: Trạm hạ lưu thấp hơn ngưỡng bất thường T3 hoặc điều kiện không gian phụ
-    cond3 = occ_down < (occ_up / t3)
+    def __init__(
+        self,
+        s1: float = 10.0,
+        s2: float = 0.20,
+        s3: float = 20.0,
+        persistence: int = 2,
+    ):
+        """Khởi tạo các ngưỡng tham số cho thuật toán.
 
-    # Sự cố được xác nhận khi thỏa mãn đồng thời các điều kiện cốt lõi của thuật toán
-    if cond1 and cond2 and cond3:
-        return True
-        
-    return False
+        Args:
+            s1: Ngưỡng chênh lệch tuyệt đối (OCC_up - OCC_down), mặc định 10.0%.
+            s2: Ngưỡng chênh lệch tương đối ((OCC_up - OCC_down) / OCC_up), mặc định 0.20 (20%).
+            s3: Ngưỡng occupancy trạm hạ lưu tối đa để tránh ùn tắc lan truyền, mặc định 20.0%.
+            persistence: Số chu kỳ liên tiếp cần thỏa mãn điều kiện để xác nhận sự cố, mặc định 2 chu kỳ.
+        """
+        self.s1 = s1
+        self.s2 = s2
+        self.s3 = s3
+        self.persistence = persistence
+        self._consecutive_count = 0
 
+    def evaluate(self, occ_up: float, occ_down: float) -> bool:
+        """Đánh giá một mẫu dữ liệu tại thời điểm hiện tại.
 
-if __name__ == "__main__":
-    # Test thử nghiệm cục bộ khi chạy file trực tiếp
-    print("Test thử nghiệm thuật toán California:")
-    print("Trường hợp bình thường (Up: 5.0, Down: 4.5):", detect_incident(5.0, 4.5))
-    print("Trường hợp có sự cố (Up: 25.0, Down: 8.0):", detect_incident(25.0, 8.0))
+        Args:
+            occ_up: Occupancy tại trạm thượng lưu (%).
+            occ_down: Occupancy tại trạm hạ lưu (%).
+
+        Returns:
+            True nếu phát hiện sự cố, False nếu bình thường.
+        """
+        diff = occ_up - occ_down
+        rel_diff = diff / occ_up if occ_up > 0 else 0.0
+
+        # Ba điều kiện cốt lõi của thuật toán California #7:
+        # 1. Chênh lệch tuyệt đối vượt ngưỡng S1
+        cond1 = diff >= self.s1
+        # 2. Chênh lệch tương đối vượt ngưỡng S2
+        cond2 = rel_diff >= self.s2
+        # 3. Trạm hạ lưu không quá tải (dưới hoặc bằng S3)
+        cond3 = occ_down <= self.s3
+
+        is_candidate = cond1 and cond2 and cond3
+
+        # Bộ lọc duy trì (Persistence filter) tránh báo giả do nhiễu ngắn hạn
+        if is_candidate:
+            self._consecutive_count += 1
+        else:
+            self._consecutive_count = 0
+
+        return self._consecutive_count >= self.persistence
+
+    def reset(self) -> None:
+        """Đặt lại bộ đếm trạng thái (dùng khi chuyển kịch bản mới)."""
+        self._consecutive_count = 0
