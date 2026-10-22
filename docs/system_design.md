@@ -1,34 +1,131 @@
 # Thiết kế hệ thống
 
-## Phạm vi
-
-Đây là chương trình Python chạy cục bộ từ Terminal, phục vụ demo và học tập. Không có Frontend, Backend/API server riêng hoặc giao diện web. Thiết kế giữ ở mức các mô-đun Python nhỏ, chưa bổ sung kiến trúc triển khai phức tạp.
-
-## Luồng xử lý dự kiến
+## Kiến trúc & Luồng dữ liệu
 
 ```text
-Dữ liệu giao thông
-    → Đọc dữ liệu
-    → Kiểm tra dữ liệu
-    → Thuật toán California
-    → Xác định trạng thái giao thông
-    → Xuất kết quả
-    → Đánh giá hiệu quả phát hiện
+                        ┌─────────────────────────────┐
+                        │   main.py  (Mai - Người 4)  │
+                        │   Điều phối & hiển thị      │
+                        └─────────────────────────────┘
+                                      │
+          ┌───────────────────────────┼───────────────────────────┐
+          │                           │                           │
+          ▼                           ▼                           ▼
+  ┌──────────────┐          ┌──────────────────┐        ┌──────────────┐
+  │ simulator.py │          │  california.py   │        │  metrics.py  │
+  │ (Cường-P.2)  │          │  (Khang - P.1)   │        │ (Hiếu - P.3) │
+  └──────────────┘          └──────────────────┘        └──────────────┘
+         │                       │        ▲                      │
+         │  occ_up, occ_down     │        │ kiểm thử độc lập     │
+         │ ──────────────────────▶        │                      │
+         │                       │  ┌─────────────────┐         │
+         │                       │  │ test_california  │         │
+         │                       │  │  (Khoa - P.5)   │         │
+         │                       │  └─────────────────┘         │
+         │                       │  kết quả phát hiện           │
+         │                       └──────────────────────────────▶│
+         │                                                        │
+         │  nhãn incident (ground truth)                         │
+         │ ──────────────────────────────────────────────────────▶│
+         │                                                        │
+         │                                              DR, FAR, TTD
 ```
 
-Luồng trên là mục tiêu thiết kế; hiện chưa có mô-đun đọc/kiểm tra dữ liệu, thuật toán, đầu ra kết quả hay đánh giá được triển khai.
+---
 
-## Trách nhiệm các thành phần
+## Trách nhiệm từng module
 
-- `src/main.py`: điểm vào dòng lệnh; điều phối luồng xử lý khi các thành phần được xây dựng.
-- `src/california.py`: chứa quy tắc phát hiện California sau khi công thức và thứ tự điều kiện được xác minh.
-- `src/simulator.py`: dành cho tạo chuỗi mô phỏng có đặc tả rõ ràng; không thay thế dữ liệu thực tế và hiện chưa tạo mẫu.
-- `src/metrics.py`: tính các chỉ số đánh giá từ kết quả phát hiện và nhãn tham chiếu khi định nghĩa đã được thống nhất.
-- `data/`: lưu trữ có tổ chức dữ liệu đầu vào/kiểm thử và tài liệu nguồn gốc; hiện chưa có dữ liệu.
-- `tests/`: chứa kiểm thử thuật toán và xử lý dữ liệu; kiểm thử hiện tại được bỏ qua cho đến khi có mã và đặc tả.
+### `simulator.py` — Cường (Người 2)
+Tạo dữ liệu occupancy mô phỏng cho 3 kịch bản:
 
-## Cách chạy và ranh giới mô-đun
+| Kịch bản | Hàm gọi | Mô tả |
+|---|---|---|
+| Bình thường | `generate_normal()` | OCC cả 2 trạm ≈ 20%, không sự cố |
+| Có sự cố | `generate_incident()` | OCC_up tăng, OCC_down giảm đột ngột |
+| Ùn tắc tự nhiên | `generate_edge_case()` | OCC cả 2 trạm đều tăng (không phải sự cố) |
 
-Điểm vào dự kiến là `python -m src.main` từ thư mục gốc. `main.py` sẽ đọc/chuẩn bị dữ liệu, gọi phần kiểm tra đầu vào, chuyển dữ liệu hợp lệ cho `california.py`, rồi chuyển kết quả và nhãn tham chiếu cho phần xuất kết quả/đánh giá. Chi tiết giao tiếp giữa mô-đun cần được chốt cùng định dạng dữ liệu và đặc tả thuật toán.
+Cách Khang và Hiếu lấy dữ liệu:
+```python
+from src.simulator import generate_incident
 
-Hiện tại chỉ có thông báo khung từ `main.py`; những bước còn lại chưa được triển khai. Không có tiến trình server chạy nền hoặc API cần khởi động.
+result = generate_incident()
+for rec in result.records:
+    rec.occ_up      # → Khang dùng để chạy thuật toán
+    rec.occ_down    # → Khang dùng để chạy thuật toán
+    rec.incident    # → Hiếu dùng để chấm điểm (True/False)
+```
+
+---
+
+### `california.py` — Khang (Người 1)
+Nhận `occ_up`, `occ_down` từng chu kỳ, áp dụng thuật toán California, trả về kết quả phát hiện.
+
+**Khang cần cung cấp cho nhóm:**
+- Tên hàm phát hiện và cách gọi.
+- Định dạng kết quả trả về tại mỗi chu kỳ (ví dụ: `True/False` hoặc trạng thái `"normal"/"incident"`).
+
+---
+
+### `metrics.py` — Hiếu (Người 3)
+Nhận kết quả phát hiện từ `california.py` và nhãn thực tế `rec.incident` từ `simulator.py`, tính các chỉ số:
+
+| Chỉ số | Ý nghĩa |
+|---|---|
+| DR (Detection Rate) | Tỷ lệ sự cố được phát hiện đúng |
+| FAR (False Alarm Rate) | Tỷ lệ báo động sai khi không có sự cố |
+| TTD (Time to Detection) | Thời gian từ lúc sự cố xảy ra đến lúc phát hiện |
+
+---
+
+### `main.py` — Mai (Người 4)
+Gọi các module theo đúng thứ tự và hiển thị kết quả ra Terminal:
+```
+simulator → california → metrics → in kết quả
+```
+
+---
+
+### `tests/test_california.py` — Khoa (Người 5)
+Kiểm thử độc lập thuật toán California, đảm bảo kết quả đúng trước khi tích hợp vào chương trình chính.
+
+**Khoa cần kiểm thử:**
+
+| Trường hợp | Dữ liệu đầu vào | Kết quả mong đợi |
+|---|---|---|
+| Bình thường | OCC_up ≈ OCC_down ≈ 20% | Không phát hiện sự cố |
+| Có sự cố | OCC_up ≈ 55%, OCC_down ≈ 8% | Phát hiện sự cố |
+| Ùn tắc tự nhiên | OCC_up ≈ OCC_down ≈ 45% | Không phát hiện sự cố |
+
+Khoa có thể lấy dữ liệu trực tiếp từ `simulator.py`:
+```python
+from src.simulator import generate_normal, generate_incident, generate_edge_case
+```
+
+---
+
+## Quy ước dữ liệu chung
+
+| Thuộc tính | Quy ước |
+|---|---|
+| Đơn vị OCC | Phần trăm (%), giá trị 0–100 |
+| Chu kỳ lấy mẫu | 30 giây |
+| Đồng bộ thời gian | Hai trạm dùng chung `timestamp` |
+| Nhãn sự cố | `True`/`False` (Python), `1`/`0` (CSV) |
+| Seed | Cố định theo từng kịch bản — tái tạo được cùng dữ liệu |
+
+---
+
+## Cách chạy
+
+```bash
+# Chạy toàn bộ chương trình
+python -m src.main
+
+# Tạo lại dữ liệu mô phỏng
+python -m src.simulator
+
+# Chạy kiểm thử
+python -m pytest -v
+```
+
+
