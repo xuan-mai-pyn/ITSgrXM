@@ -33,6 +33,31 @@
 
 ---
 
+## Lớp REST API
+
+`src/api.py` cung cấp HTTP API độc lập, không biến `src/main.py` thành server:
+
+```text
+HTTP client → src.api → simulator → CaliforniaAlgorithm → metrics
+                └──────────────────────────────→ JSON response
+```
+
+- `GET /api/health`: trạng thái dịch vụ.
+- `POST /api/simulations`: tạo một kịch bản đã hỗ trợ, chạy California trên
+  từng bản ghi, rồi dùng nhãn mô phỏng và mốc cảnh báo để tính metrics.
+- `POST /api/evaluations`: nhận các khoảng sự cố và thời điểm cảnh báo, gọi
+  `metrics.summarize`.
+- `GET /api/dashboard`: trả tóm tắt kết quả API gần nhất trong bộ nhớ tiến trình.
+
+API không dùng database. Dashboard không có dữ liệu trước khi có request mô
+phỏng/đánh giá thành công; dữ liệu trong bộ nhớ mất khi tiến trình kết thúc và
+không được chia sẻ giữa nhiều worker. CORS mặc định chỉ cho phép origin
+`localhost`/`127.0.0.1` khi phát triển; có thể cấu hình thêm bằng
+`ITS_ALLOWED_ORIGINS`. Chi tiết schema, ví dụ và lệnh chạy nằm trong
+[`docs/api.md`](api.md).
+
+---
+
 ## Trách nhiệm từng module
 
 ### `simulator.py` — Cường (Người 2)
@@ -127,5 +152,4 @@ python -m src.simulator
 # Chạy kiểm thử
 python -m pytest -v
 ```
-
 
