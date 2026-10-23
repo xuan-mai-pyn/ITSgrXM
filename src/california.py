@@ -4,14 +4,14 @@ TODO: Bổ sung đặc tả bài giảng đã xác minh trước khi triển kha
 ngưỡng, thứ tự kiểm tra và trạng thái xác nhận/kết thúc sự cố.
 
 
-Thuật toán California (California Algorithm #8) phát hiện sự cố giao thông.
+Thuật toán California phát hiện sự cố giao thông.
 Người phụ trách: Khang (Người 1)
 """
 
 from __future__ import annotations
 
 class CaliforniaAlgorithm:
-    """Thuật toán phát hiện sự cố giao thông California Algorithm #7.
+    """Thuật toán phát hiện sự cố giao thông California Algorithm.
 
     Sử dụng chênh lệch Occupancy giữa trạm thượng lưu (upstream) và 
     trạm hạ lưu (downstream) để phát hiện sự cố.
