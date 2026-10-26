@@ -1,15 +1,18 @@
 # ITSgrXM Frontend
 
-Frontend độc lập minh họa giao diện demo phát hiện sự cố giao thông bằng thuật toán California. Thành viên phụ trách: Khang.
+Frontend demo phát hiện sự cố giao thông bằng thuật toán California. Thành viên phụ trách: Khang.
 
 ## Chạy frontend
 
-Không cần cài đặt package hoặc khởi động Python backend:
+Không cần cài đặt package frontend. Cần khởi động backend theo hướng dẫn tại `docs/api.md`:
 
-1. Mở `fe/index.html` trực tiếp bằng trình duyệt; hoặc
-2. Chạy một static file server trong thư mục `fe/` (ví dụ `python -m http.server 8000`) rồi truy cập `http://localhost:8000`.
+1. Từ thư mục gốc, chạy `python -m uvicorn src.api:app --reload --port 8000`.
+2. Chạy static file server trong thư mục `fe/` (ví dụ `python -m http.server 5500`) rồi truy cập `http://localhost:5500`.
 
-Các trang dùng đường dẫn tương đối và có thể hoạt động độc lập khi mở từ thư mục này.
+Không mở bằng `file://`; backend cho phép CORS mặc định với `localhost` và `127.0.0.1`.
+Frontend tự thử API trên cổng `8000`, sau đó `8001` nếu cổng mặc định không
+khả dụng. Nếu `8000` đang bị chiếm, có thể chạy backend bằng
+`python -m uvicorn src.api:app --reload --port 8001`.
 
 ## Cấu trúc
 
@@ -21,7 +24,9 @@ fe/
 │   ├── css/style.css
 │   ├── js/
 │   │   ├── app.js
-│   │   ├── data.js
+│   │   ├── api-client.js
+│   │   ├── dashboard.js
+│   │   ├── evaluation.js
 │   │   └── charts.js
 │   └── images/.gitkeep
 └── pages/
@@ -32,6 +37,10 @@ fe/
 
 ## Nguồn dữ liệu
 
-`assets/js/data.js` khai báo rõ fixture tĩnh chỉ dành cho frontend: các mẫu occupancy cho hai trạm, nhãn tình trạng minh họa và ba chỉ số mẫu. Các giá trị này không được lấy từ backend, không phải kết quả thực nghiệm và không thể hiện độ chính xác thật của thuật toán California. Biểu đồ được vẽ bằng SVG thuần trong `assets/js/charts.js`, không phụ thuộc thư viện bên ngoài.
-
-Frontend hiện **chưa kết nối backend**, không gọi API và không import module Python. Để tích hợp trong tương lai, có thể thay lớp nguồn dữ liệu trong `data.js` bằng một adapter đọc API có cùng cấu trúc dữ liệu; phần giao diện và thành phần biểu đồ vẫn có thể tái sử dụng.
+Trang Mô Phỏng lấy các chu kỳ và kết quả phát hiện từ `POST /api/simulations`.
+Dashboard và Đánh Giá lấy kết quả gần nhất từ `GET /api/dashboard`; trước khi
+có kết quả, giao diện hiển thị trạng thái chưa có dữ liệu thay vì số liệu mẫu.
+Backend chỉ lưu kết quả trong bộ nhớ tiến trình, nên dữ liệu mất khi backend
+khởi động lại. Dữ liệu mô phỏng là dữ liệu tổng hợp, không phải dữ liệu giao
+thông thực tế. `charts.js` là mã minh họa cũ, không được các trang hiện tại
+nạp.

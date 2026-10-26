@@ -22,25 +22,24 @@
     <main>
         <section class="dashboard-overview">
             <h2>Tổng Quan Hệ Thống Giao Thông</h2>
-            <p>Bảng điều khiển hiển thị các số liệu thống kê và trạng thái vận hành của thuật toán California.</p>
+            <p id="dashboard-status" role="status" aria-live="polite">Đang tải dữ liệu từ backend...</p>
 
-            <!-- Các thẻ thống kê nhanh -->
             <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 20px;">
                 <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                    <h3>Tổng Sự Cố Phát Hiện</h3>
-                    <p style="font-size: 24px; font-weight: bold; color: #2563eb; margin-top: 10px;">14</p>
+                    <h3>Số Lần Phát Hiện Trong Mô Phỏng Gần Nhất</h3>
+                    <p id="dashboard-detection-count" style="font-size: 24px; font-weight: bold; color: #2563eb; margin-top: 10px;">--</p>
                 </div>
                 <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                     <h3>Detection Rate</h3>
-                    <p style="font-size: 24px; font-weight: bold; color: #16a34a; margin-top: 10px;">92.5%</p>
+                    <p id="dashboard-dr" style="font-size: 24px; font-weight: bold; color: #16a34a; margin-top: 10px;">--</p>
                 </div>
                 <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                     <h3>False Alarm Rate</h3>
-                    <p style="font-size: 24px; font-weight: bold; color: #dc2626; margin-top: 10px;">4.2%</p>
+                    <p id="dashboard-far" style="font-size: 24px; font-weight: bold; color: #dc2626; margin-top: 10px;">--</p>
                 </div>
                 <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                     <h3>Mean Time to Detect</h3>
-                    <p style="font-size: 24px; font-weight: bold; color: #d97706; margin-top: 10px;">1.8 phút</p>
+                    <p id="dashboard-ttd" style="font-size: 24px; font-weight: bold; color: #d97706; margin-top: 10px;">--</p>
                 </div>
             </div>
         </section>
@@ -49,5 +48,7 @@
     <footer>
         <p>&copy; 2026 Project ITS - Phát triển bởi Nhóm XM</p>
     </footer>
+    <script src="../assets/js/api-client.js"></script>
+    <script src="../assets/js/dashboard.js"></script>
 </body>
 </html>

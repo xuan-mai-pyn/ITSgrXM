@@ -22,32 +22,32 @@
     <main>
         <section class="evaluation-section" style="background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
             <h2>Đánh Giá Hiệu Suất Thuật Toán California</h2>
-            <p>Trang này trình bày các chỉ số đánh giá chất lượng phát hiện sự cố giao thông của hệ thống (lưu ý: số liệu dưới đây dùng để minh họa giao diện).</p>
+            <p id="evaluation-status" role="status" aria-live="polite">Đang tải kết quả đánh giá từ backend...</p>
 
             <div class="evaluation-table" style="margin-top: 20px; overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; text-align: left;">
                     <thead>
                         <tr style="background: #1e293b; color: #fff;">
                             <th style="padding: 12px; border: 1px solid #cbd5e1;">Chỉ Số (Metric)</th>
-                            <th style="padding: 12px; border: 1px solid #cbd5e1;">Giá Trị Minh Họa</th>
+                            <th style="padding: 12px; border: 1px solid #cbd5e1;">Giá Trị Từ Backend</th>
                             <th style="padding: 12px; border: 1px solid #cbd5e1;">Ý Nghĩa & Diễn Giải</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold;">Detection Rate (DR)</td>
-                            <td style="padding: 12px; border: 1px solid #cbd5e1; color: #16a34a; font-weight: bold;">92.5%</td>
+                            <td id="evaluation-dr" style="padding: 12px; border: 1px solid #cbd5e1; color: #16a34a; font-weight: bold;">--</td>
                             <td style="padding: 12px; border: 1px solid #cbd5e1;">Tỷ lệ phát hiện chính xác các sự cố xảy ra trên đoạn đường mẫu.</td>
                         </tr>
                         <tr style="background: #f8fafc;">
                             <td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold;">False Alarm Rate (FAR)</td>
-                            <td style="padding: 12px; border: 1px solid #cbd5e1; color: #dc2626; font-weight: bold;">4.2%</td>
-                            <td style="padding: 12px; border: 1px solid #cbd5e1;">Tỷ lệ cảnh báo giả (báo nhầm sự cố khi giao thông bình thường).</td>
+                            <td id="evaluation-far" style="padding: 12px; border: 1px solid #cbd5e1; color: #dc2626; font-weight: bold;">--</td>
+                            <td style="padding: 12px; border: 1px solid #cbd5e1;">Tần suất hoặc tỷ lệ cảnh báo sai; ý nghĩa phụ thuộc định nghĩa FAR trong kết quả.</td>
                         </tr>
                         <tr>
-                            <td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold;">Mean Time to Detect (MTTD)</td>
-                            <td style="padding: 12px; border: 1px solid #cbd5e1; color: #d97706; font-weight: bold;">1.8 phút</td>
-                            <td style="padding: 12px; border: 1px solid #cbd5e1;">Thời gian trung bình tính từ lúc sự cố phát sinh đến khi thuật toán phát hiện ra.</td>
+                            <td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold;">Time to Detect (TTD)</td>
+                            <td id="evaluation-ttd" style="padding: 12px; border: 1px solid #cbd5e1; color: #d97706; font-weight: bold;">--</td>
+                            <td style="padding: 12px; border: 1px solid #cbd5e1;">Thời gian trung bình từ lúc sự cố phát sinh đến khi thuật toán phát hiện, theo đơn vị thời gian đã dùng khi đánh giá.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -58,5 +58,7 @@
     <footer>
         <p>&copy; 2026 Project ITS - Phát triển bởi Nhóm XM</p>
     </footer>
+    <script src="../assets/js/api-client.js"></script>
+    <script src="../assets/js/evaluation.js"></script>
 </body>
 </html>

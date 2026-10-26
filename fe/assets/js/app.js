@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const API_URL = "http://127.0.0.1:8000";
-
     const startBtn = document.getElementById("start-btn");
     const pauseBtn = document.getElementById("pause-btn");
     const resetBtn = document.getElementById("reset-btn");
@@ -37,11 +35,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function displayRecord(record) {
         if (upstreamElement) {
-            upstreamElement.textContent = Number(record.occ_up).toFixed(1);
+            upstreamElement.textContent = `${Number(record.occ_up).toFixed(1)}%`;
         }
 
         if (downstreamElement) {
-            downstreamElement.textContent = Number(record.occ_down).toFixed(1);
+            downstreamElement.textContent = `${Number(record.occ_down).toFixed(1)}%`;
         }
 
         if (record.detected) {
@@ -173,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         try {
-            const response = await fetch(`${API_URL}/api/simulations`, {
+            const response = await window.itsFetch("/api/simulations", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -205,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Lỗi tải dữ liệu mô phỏng:", error);
 
             setStatus(
-                `Không thể kết nối backend: ${error.message}. Kiểm tra server tại ${API_URL}.`,
+                `Không thể kết nối backend: ${error.message}`,
                 "danger"
             );
         } finally {
@@ -254,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
             setStatus("Đang kiểm tra kết nối backend...");
 
             try {
-                const response = await fetch(`${API_URL}/api/health`);
+                const response = await window.itsFetch("/api/health");
 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
@@ -270,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("Lỗi kiểm tra backend:", error);
 
                 setStatus(
-                    `Không kết nối được backend. Hãy kiểm tra server tại ${API_URL}.`,
+                    `Không kết nối được backend: ${error.message}`,
                     "danger"
                 );
             } finally {
