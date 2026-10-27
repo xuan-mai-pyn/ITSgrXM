@@ -1,5 +1,3 @@
-"""Chạy demo mô phỏng phát hiện sự cố giao thông bằng thuật toán California."""
-
 from __future__ import annotations
 
 import math
@@ -8,7 +6,135 @@ from collections.abc import Mapping
 from numbers import Real
 from pathlib import Path
 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
+# --- PHẦN 1: CẤU HÌNH FASTAPI (CHO FRONTEND GỌI API) ---
+app = FastAPI(title="ITS Traffic Incident Detection API")
+@app.get("/")
+def read_root():
+    return {"message": "API Mạng giao thông thông minh (ITS) đang hoạt động!"}
+
+
+@app.get("/api/run-simulation")
+def run_simulation_api():
+    """API chạy mô phỏng thuật toán California và trả về kết quả JSON cho Frontend"""
+    try:
+        from . import simulator
+        from .california import CaliforniaAlgorithm
+
+        generator = getattr(simulator, "generate_all_scenarios", None)
+        if not callable(generator):
+            return {"status": "error", "message": "Hàm generate_all_scenarios không tồn tại."}
+
+        scenarios = generator()
+        results_data = {}
+
+        for name, result in scenarios.items():
+            records, description = _validate_result(str(name), result)
+            sample_interval = getattr(result, "sample_interval", 30)
+
+            algorithm = CaliforniaAlgorithm()
+            detection_starts: list[int] = []
+            previously_detected = False
+            
+            records_list = []
+            for record in records:
+                detected = algorithm.evaluate(record.occ_up, record.occ_down)
+                if detected and not previously_detected:
+                    detection_starts.append(record.timestamp)
+                previously_detected = detected
+                
+                records_list.append({
+                    "timestamp": record.timestamp,
+                    "occ_up": record.occ_up,
+                    "occ_down": record.occ_down,
+                    "incident": record.incident
+                })
+
+            results_data[str(name)] = {
+                "description": description,
+                "sample_interval": sample_interval,
+                "records": records_list,
+                "detected_cycles": detection_starts
+            }
+
+        return {
+            "status": "success",
+            "message": "Chạy thuật toán thành công",
+            "data": results_data
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+# Cấu hình CORS để cho phép Frontend gọi API không bị lỗi chặn
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Cho phép mọi nguồn gọi
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.get("/")
+def read_root():
+    return {"message": "API Mạng giao thông thông minh (ITS) đang hoạt động!"}
+
+
+@app.get("/api/run-simulation")
+def run_simulation_api():
+    """API chạy mô phỏng thuật toán California và trả về kết quả JSON cho Frontend"""
+    try:
+        from . import simulator
+        from .california import CaliforniaAlgorithm
+
+        generator = getattr(simulator, "generate_all_scenarios", None)
+        if not callable(generator):
+            return {"status": "error", "message": "Hàm generate_all_scenarios không tồn tại."}
+
+        scenarios = generator()
+        results_data = {}
+
+        for name, result in scenarios.items():
+            records, description = _validate_result(str(name), result)
+            sample_interval = getattr(result, "sample_interval", 30)
+
+            algorithm = CaliforniaAlgorithm()
+            detection_starts: list[int] = []
+            previously_detected = False
+            
+            records_list = []
+            for record in records:
+                detected = algorithm.evaluate(record.occ_up, record.occ_down)
+                if detected and not previously_detected:
+                    detection_starts.append(record.timestamp)
+                previously_detected = detected
+                
+                records_list.append({
+                    "timestamp": record.timestamp,
+                    "occ_up": record.occ_up,
+                    "occ_down": record.occ_down,
+                    "incident": record.incident
+                })
+
+            results_data[str(name)] = {
+                "description": description,
+                "sample_interval": sample_interval,
+                "records": records_list,
+                "detected_cycles": detection_starts
+            }
+
+        return {
+            "status": "success",
+            "message": "Chạy thuật toán thành công",
+            "data": results_data
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+# --- PHẦN 2: CÁC HÀM XỬ LÝ DEMO TRÊN TERMINAL ---
 def _is_number(value: object) -> bool:
     return isinstance(value, Real) and not isinstance(value, bool) and math.isfinite(value)
 
@@ -172,4 +298,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    import uvicorn
+    # Chạy server FastAPI bằng uvicorn khi chạy trực tiếp file
+    uvicorn.run("src.main:app", host="127.0.0.1", port=8000, reload=True)
