@@ -1,143 +1,146 @@
 # California Traffic Incident Detection System
 
-## 1. Giới thiệu dự án
+ITSgrXM là dự án demo về phát hiện sự cố giao thông bằng thuật toán California. Dự án kết hợp backend Python tạo và phân tích dữ liệu giao thông mô phỏng với giao diện web để chạy mô phỏng và xem kết quả.
 
-Đây là dự án demo thuật toán California trong bài toán phát hiện sự cố giao thông thuộc lĩnh vực Hệ thống giao thông thông minh (Intelligent Transportation Systems – ITS). Dự án hướng đến mục đích học tập và thuyết trình, với cách tổ chức đơn giản để sinh viên có thể đọc, chạy và mở rộng.
+> Dự án phục vụ mục đích học tập và trình diễn. Dữ liệu được tạo bằng mô phỏng, không phải dữ liệu giao thông thực tế.
 
-Phiên bản hiện tại mới thiết lập cấu trúc và phần khung. Chưa có triển khai thuật toán, dữ liệu mẫu hoặc kết quả đánh giá.
+## Tính năng
 
-## 2. Mục tiêu dự án
+- Tạo các kịch bản giao thông bình thường, có sự cố và ùn tắc tự nhiên.
+- Phân tích occupancy tại trạm thượng lưu và hạ lưu bằng `CaliforniaAlgorithm`.
+- Chạy mô phỏng qua REST API hoặc từ dòng lệnh.
+- Xem kết quả mô phỏng, Dashboard và các chỉ số đánh giá trên giao diện web.
+- Tính Detection Rate (DR), False Alarm Rate (FAR), Time to Detection (TTD), cùng các số liệu TP, FN, FP và cảnh báo lặp.
 
-- Tìm hiểu nguyên lý phát hiện sự cố từ dữ liệu các trạm giám sát.
-- Tổ chức chương trình Python chạy trực tiếp trong Terminal.
-- Chuẩn bị nơi lưu dữ liệu, mã nguồn, kiểm thử và tài liệu thiết kế.
-- Tạo nền tảng để sau này kiểm thử và đánh giá hiệu quả phát hiện một cách có thể lặp lại.
+## Công nghệ sử dụng
 
-## 3. Phạm vi thực hiện
+- **Backend:** Python, FastAPI, Uvicorn
+- **Frontend:** HTML, CSS và JavaScript thuần
+- **Kiểm thử:** pytest, FastAPI TestClient
 
-Trong giai đoạn khởi tạo, dự án chỉ cung cấp cấu trúc thư mục, tài liệu và khung mã nguồn. Chưa cài đặt logic thuật toán California, bộ mô phỏng dữ liệu, phép tính các chỉ số đánh giá hoặc bộ dữ liệu đầu vào.
+## Bắt đầu
 
-Đây là ứng dụng Python chạy cục bộ. Dự án không có Frontend, Backend riêng, API server hay giao diện web.
+### Yêu cầu
 
-## 4. Nguyên lý hoạt động tổng quát
+- Python 3.10 trở lên
+- Trình duyệt web hiện đại
 
-Khi được triển khai, chương trình dự kiến đọc dữ liệu OCC tại trạm phía thượng lưu (`OCC_up`) và trạm phía hạ lưu (`OCC_down`), kiểm tra tính hợp lệ, áp dụng đúng các điều kiện và ngưỡng của thuật toán California, rồi xuất trạng thái giao thông. Kết quả sẽ được đối chiếu với nhãn sự cố đã biết để tính các chỉ số đánh giá.
+### Cài đặt
 
-Đây chỉ là luồng khái quát, không thay thế công thức hoặc thứ tự kiểm tra của tài liệu bài giảng. Các ngưỡng T1, T2, T3, điều kiện xác nhận qua chu kỳ tiếp theo và điều kiện kết thúc sự cố cần được xác minh trước khi triển khai. Xem [docs/algorithm.md](docs/algorithm.md).
+Mở terminal tại thư mục gốc dự án và tạo môi trường ảo:
 
-## 5. Công nghệ sử dụng
-
-- Python 3.10 trở lên.
-- `pytest` để tổ chức và chạy kiểm thử.
-- Thư viện chuẩn Python cho phần khung ban đầu.
-
-`pytest` là phụ thuộc phát triển/kiểm thử duy nhất hiện được khai báo. Chưa cần `pandas` vì chưa có mã đọc hoặc xử lý CSV; chỉ bổ sung nếu triển khai thực tế cần đến.
-
-## 6. Cấu trúc thư mục và chức năng từng thành phần
-
-```text
-ITSgrXM/
-├── README.md
-├── requirements.txt
-├── .gitignore
-├── data/
-│   └── README.md
-├── src/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── california.py
-│   ├── simulator.py
-│   └── metrics.py
-├── tests/
-│   └── test_california.py
-└── docs/
-    ├── algorithm.md
-    ├── system_design.md
-    └── evaluation.md
-```
-
-- `src/main.py`: điểm vào chương trình Terminal; hiện chỉ thông báo phần xử lý chưa được triển khai.
-- `src/california.py`: vị trí dành cho logic thuật toán California.
-- `src/simulator.py`: vị trí dành cho mô phỏng/chuẩn bị dữ liệu khi có đặc tả phù hợp; chưa sinh dữ liệu.
-- `src/metrics.py`: vị trí dành cho các chỉ số đánh giá; chưa tính chỉ số.
-- `data/`: hướng dẫn cách tổ chức dữ liệu, không chứa dữ liệu giả hoặc dữ liệu thực tế trong phiên bản này.
-- `tests/`: kiểm thử thuật toán; kiểm thử California hiện được đánh dấu bỏ qua cho đến khi có đặc tả và mã triển khai.
-- `docs/`: tài liệu nguyên lý, thiết kế hệ thống và kế hoạch đánh giá.
-
-## 7. Yêu cầu cài đặt
-
-- Python 3.10 trở lên và `pip`.
-- Terminal, PowerShell hoặc Command Prompt.
-- Git là tùy chọn nếu bạn cần quản lý mã nguồn theo phiên bản.
-
-## 8. Hướng dẫn thiết lập môi trường Python
-
-Tại thư mục gốc dự án, tạo môi trường ảo:
-
-```bash
+```powershell
 python -m venv .venv
 ```
 
-Kích hoạt môi trường trên Windows (PowerShell):
+Kích hoạt môi trường trên Windows PowerShell:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
 
-Trên Windows (Command Prompt):
-
-```bat
-.venv\Scripts\activate.bat
-```
-
-Trên macOS/Linux:
+Trên macOS/Linux hoặc Git Bash:
 
 ```bash
 source .venv/bin/activate
 ```
 
-## 9. Hướng dẫn cài đặt thư viện
-
-Sau khi kích hoạt môi trường ảo:
+Cài đặt các thư viện cần thiết:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-Tệp phụ thuộc hiện chỉ có `pytest`, phục vụ kiểm thử. Không cần cài thư viện xử lý dữ liệu hoặc giao diện cho phần khung hiện tại.
+## Chạy ứng dụng
 
-## 10. Hướng dẫn chạy chương trình khi phần mã nguồn đã được triển khai
+### Khởi động REST API
 
-Từ thư mục gốc repository:
+Từ thư mục gốc dự án, chạy:
+
+```bash
+python -m uvicorn src.api:app --reload --port 8000
+```
+
+API mặc định chạy tại `http://127.0.0.1:8000`. Mở `http://127.0.0.1:8000/docs` để xem và thử các endpoint bằng Swagger UI.
+
+### Mở giao diện web
+
+Giữ API đang chạy, mở terminal thứ hai và chuyển đến thư mục frontend:
+
+```powershell
+Set-Location .\fe
+python -m http.server 5500
+```
+
+Mở `http://localhost:5500` trong trình duyệt. Không mở trực tiếp `index.html` bằng `file://`. Frontend tự kết nối backend ở cổng 8000, sau đó thử cổng 8001 nếu cần.
+
+Các trang trong giao diện:
+
+- **Trang chủ:** giới thiệu hệ thống.
+- **Mô phỏng:** chạy kịch bản và theo dõi kết quả phát hiện.
+- **Dashboard:** xem tóm tắt kết quả mô phỏng và đánh giá gần nhất.
+- **Đánh giá:** xem DR, FAR và TTD của kết quả gần nhất.
+
+### Chạy demo trong terminal
+
+Thay vì mở giao diện web, có thể chạy demo trực tiếp từ thư mục gốc:
 
 ```bash
 python -m src.main
 ```
 
-Hiện lệnh này chỉ hiển thị thông báo rằng thuật toán chưa được triển khai. Luồng phát hiện sự cố đầy đủ chỉ hoạt động sau khi hoàn thành việc đọc/kiểm tra dữ liệu và cài đặt thuật toán theo tài liệu đã xác minh.
+Chương trình tạo các kịch bản mô phỏng, in một số bản ghi và thời điểm thuật toán phát hiện sự cố.
 
-## 11. Hướng dẫn chạy kiểm thử
+### Tạo lại dữ liệu CSV
 
-Sau khi cài phụ thuộc, chạy từ thư mục gốc:
+Để sinh lại các tệp CSV trong `data/`, chạy:
 
 ```bash
-pytest
+python -m src.simulator
 ```
 
-Kiểm thử California hiện là khung được bỏ qua, chưa kiểm tra khả năng phát hiện. Bộ kiểm thử chỉ có thể đánh giá đầy đủ hành vi sau khi thuật toán và các trường hợp kiểm thử được triển khai. Không xem việc thu thập hoặc bỏ qua kiểm thử khung là bằng chứng thuật toán hoạt động đúng.
+## Chạy kiểm thử
 
-## 12. Hướng phát triển tiếp theo
+Từ thư mục gốc, chạy:
 
-1. Bổ sung tài liệu bài giảng/đặc tả gốc, xác minh công thức và thứ tự điều kiện của California.
-2. Chốt định dạng dữ liệu, đơn vị OCC, khoảng thời gian lấy mẫu và quy ước nhãn sự cố.
-3. Triển khai kiểm tra dữ liệu và thuật toán có xử lý dữ liệu thiếu/không hợp lệ.
-4. Bổ sung dữ liệu kiểm thử có nguồn gốc, nhãn tham chiếu và kiểm thử các tình huống biên.
-5. Tính DR, FAR, TTD theo định nghĩa đã thống nhất và báo cáo kết quả thực nghiệm có thể tái lập.
+```bash
+python -m pytest
+```
 
-## 13. Giới hạn của phiên bản demo
+## API và tài liệu
 
-- Chưa triển khai thuật toán California và chưa xác minh ngưỡng T1, T2, T3.
-- Chưa có dữ liệu đầu vào; không có kết quả thực nghiệm.
-- Chưa triển khai mô phỏng, đánh giá hoặc xử lý dữ liệu.
-- Chưa thể dùng cho giám sát giao thông thực tế hay ra quyết định vận hành.
-- Các lệnh chạy/kiểm thử mới chỉ chạy phần khung tương ứng; chúng không chứng minh hệ thống phát hiện sự cố đã hoàn chỉnh.
+API hỗ trợ kiểm tra trạng thái, chạy mô phỏng, gửi dữ liệu đánh giá và lấy kết quả Dashboard:
+
+- `GET /api/health` — kiểm tra API.
+- `POST /api/simulations` — chạy một kịch bản mô phỏng.
+- `POST /api/evaluations` — tính các chỉ số từ khoảng sự cố và thời điểm cảnh báo.
+- `GET /api/dashboard` — lấy kết quả mô phỏng và đánh giá gần nhất.
+
+Xem hướng dẫn request/response và các tùy chọn tại [docs/api.md](docs/api.md). Các tài liệu khác:
+
+- [Thuật toán](docs/algorithm.md)
+- [Thiết kế hệ thống](docs/system_design.md)
+- [Đánh giá kết quả](docs/evaluation.md)
+- [Dữ liệu mô phỏng](data/README.md)
+- [Frontend](fe/README.md)
+
+## Cấu trúc dự án
+
+```text
+ITSgrXM/
+├── data/          # Các bộ dữ liệu mô phỏng dạng CSV
+├── docs/          # Tài liệu thuật toán, API, thiết kế và đánh giá
+├── fe/            # Giao diện web tĩnh
+├── src/
+│   ├── api.py      # REST API
+│   ├── california.py
+│   ├── main.py     # Demo chạy trong terminal
+│   ├── metrics.py  # Các hàm tính chỉ số đánh giá
+│   └── simulator.py
+├── tests/          # Kiểm thử thuật toán và API
+└── requirements.txt
+```
+
+## Lưu ý
+
+Dữ liệu mẫu trong `data/` và dữ liệu được tạo khi chạy mô phỏng đều là dữ liệu tổng hợp. Các ngưỡng và công thức trong thuật toán cần được đối chiếu với đặc tả sử dụng trước khi áp dụng ngoài phạm vi demo. Kết quả Dashboard được lưu trong bộ nhớ backend và sẽ mất khi tiến trình khởi động lại.

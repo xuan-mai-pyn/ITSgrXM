@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô Phỏng - Hệ Thống ITSgrXM</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>ITSgrXM System</h1>
+            <ul>
+                <li><a href="../index.html">Trang Chủ</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="simulation.html" class="active">Mô Phỏng</a></li>
+                <li><a href="evaluation.html">Đánh Giá</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="simulation-section" style="background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <h2>Mô Phỏng Thuật Toán California</h2>
+            <p>Theo dõi dữ liệu Occupancy mô phỏng từ backend giữa trạm thượng lưu (Upstream) và trạm hạ lưu (Downstream).</p>
+
+            <!-- Bảng hiển thị thông số -->
+            <div class="simulation-display" style="display: flex; gap: 20px; margin: 20px 0;">
+                <div style="flex: 1; background: #f8fafc; padding: 20px; border-radius: 6px; border-left: 4px solid #2563eb;">
+                    <h3>Trạm Thượng Lưu (Upstream)</h3>
+                    <p style="font-size: 20px; margin-top: 10px; font-weight: bold;" id="upstream-occ">--</p>
+                </div>
+                <div style="flex: 1; background: #f8fafc; padding: 20px; border-radius: 6px; border-left: 4px solid #16a34a;">
+                    <h3>Trạm Hạ Lưu (Downstream)</h3>
+                    <p style="font-size: 20px; margin-top: 10px; font-weight: bold;" id="downstream-occ">--</p>
+                </div>
+            </div>
+
+            <!-- Trạng thái cảnh báo -->
+            <div id="status-box" style="padding: 15px; background: #f1f5f9; color: #475569; border-radius: 6px; margin-bottom: 20px; font-weight: bold; text-align: center;">
+                Chưa có dữ liệu. Nhấn Bắt Đầu để tải mô phỏng từ backend.
+            </div>
+
+            <!-- Các nút điều khiển -->
+            <div class="controls" style="display: flex; gap: 10px;">
+                <button id="start-btn" class="btn" style="background: #16a34a; border: none; cursor: pointer;">Bắt Đầu</button>
+                <button id="pause-btn" class="btn" style="background: #d97706; border: none; cursor: pointer;">Tạm Dừng</button>
+                <button id="check-btn" class="btn" style="background: #2563eb; border: none; cursor: pointer;">Kiểm Tra</button>
+                <button id="reset-btn" class="btn" style="background: #dc2626; border: none; cursor: pointer;">Đặt Lại</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Project ITS - Phát triển bởi Nhóm XM</p>
+    </footer>
+
+    <script src="../assets/js/api-client.js"></script>
+    <script src="../assets/js/app.js"></script>
+</body>
+</html>
