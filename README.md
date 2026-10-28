@@ -1,321 +1,318 @@
-# ITSgrXM – California Algorithm for Traffic Incident Detection
+# ITSgrXM — Hệ thống phát hiện sự cố giao thông bằng thuật toán California
 
-## 1. Giới thiệu dự án
+## 1. Giới thiệu
 
-ITSgrXM là dự án học tập thuộc lĩnh vực Hệ thống giao thông thông minh (Intelligent Transportation Systems – ITS), tập trung nghiên cứu và mô phỏng thuật toán California trong bài toán phát hiện sự cố giao thông.
+ITSgrXM là dự án mô phỏng hệ thống phát hiện sự cố giao thông thuộc lĩnh vực Hệ thống giao thông thông minh (Intelligent Transportation Systems – ITS).
 
-Sự cố giao thông có thể làm giảm năng lực thông hành của đường, gây ùn tắc và kéo dài thời gian di chuyển. Vì vậy, việc phát hiện sự cố sớm có ý nghĩa quan trọng trong quản lý giao thông và hỗ trợ cơ quan chức năng đưa ra phương án xử lý kịp thời.
+Dự án tập trung triển khai thuật toán California để phát hiện các dấu hiệu bất thường của dòng giao thông dựa trên dữ liệu chiếm dụng làn đường (Occupancy – OCC) tại các trạm quan trắc giao thông liên tiếp.
 
-Dự án hướng đến việc xây dựng một chương trình Python có khả năng:
+Hệ thống sử dụng dữ liệu giao thông mô phỏng để kiểm tra thuật toán, đánh giá hiệu quả phát hiện và trình bày kết quả thông qua giao diện dòng lệnh cùng giao diện web cơ bản.
 
+## 2. Mục tiêu dự án
+
+- Tìm hiểu nguyên lý hoạt động của thuật toán California trong phát hiện sự cố giao thông.
+- Xây dựng chương trình Python triển khai thuật toán.
 - Mô phỏng dữ liệu giao thông trong điều kiện bình thường và khi xảy ra sự cố.
-- Sử dụng thuật toán California để phân tích dữ liệu và phát hiện dấu hiệu bất thường.
-- Đánh giá hiệu quả phát hiện thông qua các chỉ số phù hợp.
-- Kiểm thử thuật toán và trình bày kết quả thực nghiệm.
+- Đánh giá kết quả phát hiện bằng các chỉ số phù hợp.
+- Xây dựng giao diện web cơ bản để trình bày dữ liệu và kết quả đánh giá.
+- Tổ chức mã nguồn theo từng module nhằm thuận tiện cho việc phát triển, kiểm thử và tích hợp.
 
-Đây là dự án phục vụ học tập và nghiên cứu, không phải hệ thống phát hiện sự cố đang vận hành trên đường giao thông thực tế.
+## 3. Chức năng chính
 
-## 2. Mục tiêu
+### 3.1. Phát hiện sự cố bằng thuật toán California
 
-Dự án tập trung vào các mục tiêu sau:
+Đây là chức năng trọng tâm của dự án.
 
-1. Tìm hiểu nguyên lý hoạt động của thuật toán California trong phát hiện sự cố giao thông.
-2. Xây dựng dữ liệu mô phỏng để kiểm tra hoạt động của thuật toán.
-3. Tổ chức chương trình theo các module riêng biệt nhằm thuận tiện cho việc phát triển và bảo trì.
-4. Đánh giá khả năng phát hiện sự cố thông qua các chỉ số được xác định từ tài liệu môn học.
-5. Kiểm thử chương trình, phân tích kết quả và rút ra nhận xét về hiệu quả của thuật toán.
+Thuật toán sử dụng dữ liệu occupancy tại các trạm quan trắc liên tiếp để đánh giá sự khác biệt trong trạng thái giao thông và xác định dấu hiệu có thể liên quan đến sự cố.
 
-## 3. Nguyên lý hoạt động
+Các ngưỡng, điều kiện phát hiện và quy tắc xác nhận sự cố được triển khai theo tài liệu môn học đã thống nhất.
 
-Chương trình được thiết kế theo quy trình tổng quát:
+### 3.2. Mô phỏng dữ liệu giao thông
 
-Mô phỏng dữ liệu → Phát hiện sự cố → Đánh giá kết quả → Xuất báo cáo
+Chương trình tạo dữ liệu giao thông mô phỏng để phục vụ kiểm thử, bao gồm các kịch bản:
 
-### 3.1. Mô phỏng dữ liệu
+- Giao thông bình thường.
+- Giao thông có sự cố.
+- Các tình huống khác phục vụ đánh giá thuật toán nếu được triển khai.
 
-Module mô phỏng tạo dữ liệu giao thông phục vụ thử nghiệm, bao gồm các tình huống bình thường và tình huống có sự cố.
+Dữ liệu có thể bao gồm thời điểm quan sát, giá trị occupancy tại các trạm và nhãn sự cố thực tế của kịch bản mô phỏng.
 
-Dữ liệu dự kiến bao gồm thông tin occupancy tại hai trạm quan trắc và nhãn tham chiếu về trạng thái sự cố để phục vụ đánh giá.
+Dữ liệu mô phỏng không được xem là dữ liệu giao thông thực tế thu thập từ đường phố.
 
-### 3.2. Phát hiện sự cố
+### 3.3. Đánh giá hiệu quả phát hiện
 
-Thuật toán California phân tích dữ liệu từ các trạm quan trắc để xác định dấu hiệu bất thường trong trạng thái giao thông.
+Hệ thống có thể sử dụng các chỉ số đánh giá sau, tùy theo phương pháp được triển khai:
 
-Các ngưỡng phát hiện, điều kiện xác nhận và điều kiện kết thúc sự cố cần được xác định theo tài liệu môn học trước khi triển khai.
+| Chỉ số                     | Ý nghĩa                                                                    |
+| -------------------------- | -------------------------------------------------------------------------- |
+| Detection Rate (DR)        | Tỷ lệ sự cố thực tế được phát hiện                                         |
+| False Alarm Rate (FAR)     | Tỷ lệ báo động giả theo định nghĩa đánh giá được sử dụng                   |
+| Mean Time to Detect (MTTD) | Thời gian phát hiện trung bình đối với các sự cố được phát hiện thành công |
 
-### 3.3. Đánh giá hiệu quả
+Công thức, mẫu số, đơn vị và cách xác định các trường hợp phát hiện đúng, bỏ sót hoặc báo động giả được trình bày trong `docs/evaluation.md`.
 
-Kết quả phát hiện được so sánh với nhãn tham chiếu của dữ liệu mô phỏng để đánh giá hiệu quả thuật toán.
+Các chỉ số phải được tính từ dữ liệu và kết quả thực tế của chương trình, không sử dụng số liệu cố định để thay thế kết quả đánh giá.
 
-Các chỉ số cụ thể và công thức tính sẽ được xác định theo tài liệu môn học và phương pháp thực nghiệm của nhóm.
+### 3.4. Giao diện web cơ bản
+
+Frontend được xây dựng bằng HTML, CSS và JavaScript thuần, không yêu cầu framework frontend.
+
+Các trang giao diện dự kiến gồm:
+
+- Trang giới thiệu dự án.
+- Trang tổng quan dữ liệu và trạng thái mô phỏng.
+- Trang mô phỏng giao thông.
+- Trang đánh giá hiệu quả phát hiện.
+
+Trong giai đoạn đầu, frontend có thể sử dụng dữ liệu mẫu và hoạt động độc lập với backend. Dữ liệu mẫu cần được phân biệt rõ với kết quả do thuật toán California tạo ra.
+
+Việc kết nối frontend với backend thông qua API có thể được triển khai ở giai đoạn tích hợp tiếp theo.
 
 ## 4. Công nghệ sử dụng
 
-| Công nghệ          | Mục đích                          |
-| ------------------ | --------------------------------- |
-| Python 3.13.x      | Ngôn ngữ lập trình chính          |
-| Git                | Quản lý phiên bản mã nguồn        |
-| GitHub             | Lưu trữ mã nguồn và phối hợp nhóm |
-| Visual Studio Code | Môi trường phát triển             |
-| pytest             | Hỗ trợ kiểm thử tự động           |
+| Thành phần           | Công nghệ             | Mục đích                                    |
+| -------------------- | --------------------- | ------------------------------------------- |
+| Ngôn ngữ lập trình   | Python                | Triển khai thuật toán, mô phỏng và đánh giá |
+| Thuật toán phát hiện | California Algorithm  | Phát hiện dấu hiệu sự cố giao thông         |
+| Frontend             | HTML, CSS, JavaScript | Xây dựng giao diện web                      |
+| Kiểm thử             | pytest                | Kiểm thử thuật toán                         |
+| Quản lý mã nguồn     | Git, GitHub           | Quản lý phiên bản và phối hợp nhóm          |
+| Dữ liệu              | Dữ liệu mô phỏng      | Kiểm tra và đánh giá chương trình           |
 
-Các thư viện bổ sung, nếu có, được khai báo trong file `requirements.txt`.
-
-## 5. Cấu trúc dự án
+## 5. Cấu trúc thư mục
 
 ```text
 ITSgrXM/
 ├── README.md
 ├── requirements.txt
 ├── .gitignore
+│
+├── fe/
+│   ├── index.html
+│   ├── README.md
+│   ├── assets/
+│   │   ├── css/
+│   │   │   └── style.css
+│   │   ├── js/
+│   │   │   ├── app.js
+│   │   │   ├── data.js
+│   │   │   └── charts.js
+│   │   └── images/
+│   └── pages/
+│       ├── dashboard.html
+│       ├── simulation.html
+│       └── evaluation.html
+│
 ├── data/
 │   └── README.md
+│
 ├── src/
 │   ├── __init__.py
 │   ├── main.py
 │   ├── california.py
 │   ├── simulator.py
 │   └── metrics.py
+│
 ├── tests/
 │   └── test_california.py
+│
 └── docs/
     ├── algorithm.md
     ├── system_design.md
     └── evaluation.md
 ```
 
-### Mô tả các thư mục và file
+### Mô tả các thành phần
 
-**`README.md`**
+| File/thư mục               | Chức năng                                                 |
+| -------------------------- | --------------------------------------------------------- |
+| `src/main.py`              | Điều phối luồng chạy chính của chương trình               |
+| `src/california.py`        | Triển khai thuật toán California                          |
+| `src/simulator.py`         | Tạo dữ liệu giao thông mô phỏng                           |
+| `src/metrics.py`           | Tính toán các chỉ số đánh giá                             |
+| `tests/test_california.py` | Kiểm thử thuật toán California                            |
+| `data/`                    | Chứa tài liệu và dữ liệu phục vụ mô phỏng nếu cần lưu trữ |
+| `docs/algorithm.md`        | Mô tả thuật toán và các điều kiện phát hiện               |
+| `docs/system_design.md`    | Mô tả kiến trúc và cách các module phối hợp               |
+| `docs/evaluation.md`       | Mô tả công thức và phương pháp đánh giá                   |
+| `fe/`                      | Chứa mã nguồn frontend                                    |
+| `requirements.txt`         | Khai báo các thư viện Python cần thiết                    |
 
-Tài liệu giới thiệu dự án, hướng dẫn cài đặt, cách sử dụng và mô tả cấu trúc chương trình.
+## 6. Kiến trúc và luồng hoạt động
 
-**`requirements.txt`**
+### 6.1. Luồng xử lý backend
 
-Danh sách các thư viện Python cần thiết để cài đặt và chạy dự án.
+```text
+Khởi chạy chương trình
+        |
+        v
+     main.py
+        |
+        v
+   simulator.py
+Tạo dữ liệu giao thông
+        |
+        v
+   california.py
+Phát hiện sự cố
+        |
+        v
+    metrics.py
+Đánh giá kết quả
+        |
+        v
+Hiển thị kết quả trên Terminal
+```
 
-**`.gitignore`**
+`main.py` đóng vai trò điều phối các module. Mỗi module chịu trách nhiệm xử lý một phần công việc riêng biệt.
 
-Khai báo các file và thư mục không cần đưa lên GitHub, chẳng hạn môi trường ảo và file bộ nhớ đệm Python.
+### 6.2. Luồng hoạt động frontend
 
-**`data/`**
+Trong giai đoạn frontend hoạt động độc lập:
 
-Chứa tài liệu liên quan đến dữ liệu sử dụng trong dự án. File `data/README.md` mô tả định dạng, nguồn gốc và cách tạo dữ liệu mô phỏng.
+```text
+Người dùng
+    |
+    v
+Giao diện HTML/CSS/JavaScript
+    |
+    v
+Đọc dữ liệu mẫu
+    |
+    v
+Hiển thị bảng, thông tin mô phỏng
+và các chỉ số đánh giá mẫu
+```
 
-**`src/`**
+Khi API được triển khai và tích hợp, frontend có thể lấy dữ liệu từ backend thay vì sử dụng dữ liệu mẫu.
 
-Chứa mã nguồn chính của chương trình:
+## 7. Cài đặt
 
-- `main.py`: Điểm khởi chạy và điều phối các module.
-- `california.py`: Triển khai thuật toán California.
-- `simulator.py`: Tạo dữ liệu giao thông mô phỏng.
-- `metrics.py`: Tính toán các chỉ số đánh giá.
-- `__init__.py`: Khai báo package Python.
+### 7.1. Yêu cầu hệ thống
 
-**`tests/`**
+- Python 3.
+- pip.
+- Trình duyệt web hiện đại.
+- Git nếu muốn sao chép repository.
 
-Chứa các bài kiểm thử. File `test_california.py` dùng để kiểm tra hoạt động của thuật toán.
-
-**`docs/`**
-
-Chứa tài liệu kỹ thuật:
-
-- `algorithm.md`: Nguyên lý và các bước của thuật toán California.
-- `system_design.md`: Thiết kế tổng thể và cách các module phối hợp.
-- `evaluation.md`: Phương pháp, chỉ số và kết quả đánh giá thực nghiệm.
-
-## 6. Yêu cầu hệ thống
-
-Trước khi sử dụng dự án, cần chuẩn bị:
-
-- Python phiên bản 3.13.x.
-- Git.
-- Visual Studio Code hoặc một trình soạn thảo Python tương đương.
-- Terminal để chạy các lệnh cài đặt và thực thi chương trình.
-
-Hướng dẫn bên dưới sử dụng Git Bash trên Windows. Với macOS/Linux, có thể sử dụng Terminal và điều chỉnh lệnh kích hoạt môi trường ảo theo hệ điều hành.
-
-## 7. Cài đặt dự án
-
-### Bước 1. Clone repository
-
-Mở Terminal tại thư mục muốn lưu dự án và chạy:
+### 7.2. Sao chép dự án
 
 ```bash
 git clone https://github.com/xuan-mai-pyn/ITSgrXM.git
 cd ITSgrXM
 ```
 
-### Bước 2. Tạo môi trường ảo
-
-Windows:
+### 7.3. Tạo môi trường ảo
 
 ```bash
 python -m venv .venv
 ```
 
-macOS/Linux:
+Kích hoạt môi trường trên Windows:
 
 ```bash
-python3 -m venv .venv
+.venv\Scripts\activate
 ```
 
-### Bước 3. Kích hoạt môi trường ảo
-
-Windows – Git Bash:
-
-```bash
-source .venv/Scripts/activate
-```
-
-Windows – PowerShell:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-macOS/Linux:
+Trên macOS hoặc Linux:
 
 ```bash
 source .venv/bin/activate
 ```
 
-Sau khi kích hoạt thành công, Terminal thường hiển thị `(.venv)` ở đầu dòng.
-
-### Bước 4. Cài đặt thư viện
-
-Khi môi trường ảo đã được kích hoạt, chạy:
+### 7.4. Cài đặt thư viện
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-### Bước 5. Kiểm tra môi trường
+Các thư viện cần thiết được quản lý trong `requirements.txt`.
 
-Kiểm tra phiên bản Python:
+## 8. Cách chạy chương trình
 
-```bash
-python --version
-```
+### 8.1. Chạy backend
 
-Kiểm tra trạng thái repository:
-
-```bash
-git status
-```
-
-## 8. Chạy chương trình
-
-Sau khi các module đã được triển khai và tích hợp, có thể chạy chương trình chính từ thư mục gốc:
+Từ thư mục gốc của dự án, chạy:
 
 ```bash
 python -m src.main
 ```
 
-Lệnh trên khởi chạy module `main.py` theo cấu trúc package của dự án.
+Khi các module đã được triển khai và tích hợp đầy đủ, chương trình sẽ thực hiện các bước:
 
-Lưu ý: Chương trình chỉ hoạt động đầy đủ khi các module cần thiết đã được triển khai. Nếu dự án vẫn đang trong giai đoạn xây dựng, kết quả chạy có thể chưa đầy đủ.
+1. Tạo dữ liệu giao thông mô phỏng.
+2. Phân tích dữ liệu bằng thuật toán California.
+3. Đánh giá kết quả phát hiện.
+4. Hiển thị thông tin và các chỉ số trên Terminal.
 
-## 9. Kiểm thử
-
-Dự án sử dụng `pytest` để hỗ trợ kiểm thử.
-
-Chạy toàn bộ bài kiểm thử từ thư mục gốc:
-
-```bash
-python -m pytest -v
-```
-
-Các bài kiểm thử dự kiến tập trung vào:
-
-- Kiểm tra thuật toán với dữ liệu bình thường.
-- Kiểm tra thuật toán với dữ liệu có sự cố.
-- Kiểm tra các trường hợp biên.
-- Kiểm tra kết quả đầu ra theo điều kiện đã xác định.
-
-Kết quả kiểm thử cần được ghi nhận sau khi thực hiện thực tế.
-
-## 10. Đánh giá hiệu quả
-
-Việc đánh giá nhằm xác định khả năng phát hiện sự cố của thuật toán trên dữ liệu thử nghiệm.
-
-Nhóm sẽ lựa chọn và áp dụng các chỉ số phù hợp theo tài liệu môn học, có thể bao gồm:
-
-- Detection Rate (DR): Tỷ lệ phát hiện sự cố.
-- False Alarm Rate (FAR): Tỷ lệ cảnh báo sai.
-- Mean Time to Detect (MTTD): Thời gian phát hiện trung bình.
-
-Định nghĩa, công thức và cách xác định các trường hợp phát hiện đúng, bỏ sót hoặc cảnh báo sai cần được thống nhất trước khi tính toán.
-
-Các kết quả thực nghiệm và nhận xét sẽ được trình bày trong `docs/evaluation.md` sau khi chương trình chạy thành công.
-
-## 11. Quy trình làm việc nhóm
-
-Dự án được phát triển bằng Git và GitHub để các thành viên có thể làm việc trên các nhánh riêng.
-
-Các nhánh được phân chia như sau:
-
-| Nhánh    | Thành viên           |
-| -------- | -------------------- |
-| `XMai`   | Mai                  |
-| `QCuong` | Cường                |
-| `MHieu`  | Hiếu                 |
-| `DKhang` | Khang                |
-| `MKhoa`  | Khoa                 |
-| `main`   | Nhánh tích hợp chính |
-
-Quy trình làm việc đề xuất:
-
-1. Cập nhật thông tin nhánh từ repository.
-2. Chuyển sang nhánh cá nhân.
-3. Chỉnh sửa các file được phân công.
-4. Kiểm tra thay đổi trước khi commit.
-5. Commit và push lên nhánh cá nhân.
-6. Tạo Pull Request để đề xuất tích hợp vào `main`.
-7. Kiểm tra và xử lý xung đột nếu có.
-
-Ví dụ, thành viên làm việc trên nhánh `XMai` có thể sử dụng:
+### 8.2. Chạy kiểm thử
 
 ```bash
-git switch XMai
-git status
+python -m pytest -q
 ```
 
-Sau khi chỉnh sửa và kiểm tra các file của mình:
+Các bài kiểm thử được sử dụng để đánh giá hoạt động của thuật toán trong những tình huống giao thông khác nhau.
 
-```bash
-git add .
-git commit -m "Describe your changes"
-git push
+Kết quả kiểm thử cần được xác nhận bằng cách chạy lệnh trên môi trường thực tế.
+
+### 8.3. Mở frontend
+
+Mở file sau bằng trình duyệt:
+
+```text
+fe/index.html
 ```
 
-Nội dung commit nên ngắn gọn và thể hiện rõ thay đổi đã thực hiện.
+Frontend sử dụng HTML, CSS và JavaScript thuần. Nếu các trang sử dụng dữ liệu mẫu, thông tin hiển thị chỉ có mục đích minh họa, không đại diện cho kết quả chạy backend.
 
-## 12. Nguyên tắc phát triển
+## 9. Đánh giá hiệu quả
 
-- Tuân thủ cấu trúc thư mục đã thống nhất.
-- Đối chiếu thuật toán và công thức với tài liệu môn học.
-- Thống nhất định dạng dữ liệu và giao diện hàm giữa các module.
-- Không tự tạo kết quả thực nghiệm khi chưa chạy chương trình.
-- Không đưa môi trường ảo `.venv` hoặc file tạm lên GitHub.
-- Kiểm tra chương trình và bài kiểm thử trước khi tích hợp vào nhánh `main`.
-- Cập nhật tài liệu khi có thay đổi về cách sử dụng hoặc thiết kế.
+Việc đánh giá tập trung vào khả năng phát hiện sự cố của thuật toán California.
 
-## 13. Giới hạn của dự án
+Các nội dung đánh giá có thể bao gồm:
 
-Đây là dự án học tập sử dụng dữ liệu mô phỏng để nghiên cứu thuật toán phát hiện sự cố giao thông.
+- Tỷ lệ phát hiện sự cố.
+- Tỷ lệ báo động giả.
+- Thời gian phát hiện trung bình.
+- Khả năng phân biệt trạng thái giao thông bình thường và trạng thái có sự cố.
 
-Kết quả thử nghiệm trên dữ liệu mô phỏng không đồng nghĩa với hiệu quả tương tự trong môi trường giao thông thực tế. Việc triển khai thực tế cần dữ liệu phù hợp, hiệu chỉnh ngưỡng và đánh giá thêm trong các điều kiện vận hành khác nhau.
+Kết quả cần được tính từ dữ liệu mô phỏng, nhãn sự cố và đầu ra của thuật toán. Phương pháp đánh giá chi tiết được trình bày trong `docs/evaluation.md`.
 
-## 14. Tác giả và thông tin dự án
+## 10. Giới hạn của dự án
 
-Repository: https://github.com/xuan-mai-pyn/ITSgrXM
+- Dữ liệu giao thông mô phỏng không đại diện cho toàn bộ điều kiện giao thông thực tế.
+- Hiệu quả phát hiện phụ thuộc vào dữ liệu, kịch bản mô phỏng và tham số thuật toán.
+- Frontend cơ bản có thể chưa được kết nối với backend.
+- Dữ liệu mẫu trên giao diện không được xem là kết quả thực nghiệm của thuật toán.
+- Việc ứng dụng vào hệ thống giao thông thực tế cần được kiểm thử thêm bằng dữ liệu thực phù hợp.
 
-Lĩnh vực: Intelligent Transportation Systems (ITS)
+## 11. Hướng phát triển
 
-Chủ đề: Traffic Incident Detection using the California Algorithm
+- Hoàn thiện và kiểm thử thuật toán California.
+- Mở rộng các kịch bản mô phỏng giao thông.
+- Cải thiện phương pháp đánh giá hiệu quả phát hiện.
+- Hoàn thiện dashboard và các biểu đồ trực quan.
+- Xây dựng API để kết nối frontend với backend.
+- Kiểm tra thuật toán với dữ liệu giao thông thực tế khi có nguồn dữ liệu phù hợp.
 
-Ngôn ngữ lập trình chính
-: Python
+## 12. Tài liệu dự án
 
-Dự án được thực hiện với mục đích học tập, nghiên cứu thuật toán và thực hành phát triển phần mềm theo nhóm.
+Các tài liệu kỹ thuật được lưu trong thư mục `docs/`:
+
+- `algorithm.md`: Nguyên lý và điều kiện của thuật toán California.
+- `system_design.md`: Thiết kế hệ thống và luồng phối hợp giữa các module.
+- `evaluation.md`: Công thức, phương pháp và kết quả đánh giá.
+
+## 13. Kết luận
+
+ITSgrXM là dự án demo phục vụ học tập và nghiên cứu về phát hiện sự cố giao thông trong lĩnh vực Hệ thống giao thông thông minh.
+
+Dự án lấy thuật toán California làm chức năng trọng tâm, kết hợp dữ liệu giao thông mô phỏng, các chỉ số đánh giá và giao diện web cơ bản. Thiết kế theo module giúp hệ thống thuận tiện cho việc kiểm thử, phát triển và tích hợp trong các giai đoạn tiếp theo.
+
+Xem hướng dẫn request/response và các tùy chọn tại [docs/api.md](docs/api.md). Các tài liệu khác:
+
+- [Thuật toán](docs/algorithm.md)
+- [Thiết kế hệ thống](docs/system_design.md)
+- [Đánh giá kết quả](docs/evaluation.md)
+- [Dữ liệu mô phỏng](data/README.md)
+- [Frontend](fe/README.md)
