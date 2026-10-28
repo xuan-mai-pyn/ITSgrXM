@@ -1,10 +1,167 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đánh Giá - Hệ Thống ITSgrXM</title>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .eval-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-bottom: 24px;
+        }
+        .eval-header {
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+        .eval-header h2 {
+            font-size: 24px;
+            color: #1e293b;
+        }
+        .eval-header p {
+            color: #64748b;
+            margin-top: 4px;
+            font-size: 14px;
+        }
+        .eval-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+            background: #f8fafc;
+            padding: 14px 18px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+        .eval-controls label {
+            font-weight: 600;
+            color: #334155;
+            font-size: 14px;
+        }
+        .eval-controls select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            font-size: 14px;
+            background: #fff;
+            cursor: pointer;
+        }
+        .btn-eval {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-eval:hover {
+            background: #1d4ed8;
+        }
+        .btn-eval:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .metric-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 18px 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            position: relative;
+            overflow: hidden;
+        }
+        .metric-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        .card-dr::before { background: #16a34a; }
+        .card-far::before { background: #dc2626; }
+        .card-ttd::before { background: #d97706; }
+        .card-pi::before { background: #7c3aed; }
+        .metric-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+        }
+        .metric-value {
+            font-size: 28px;
+            font-weight: 800;
+            margin: 8px 0 4px 0;
+        }
+        .metric-card.card-dr .metric-value { color: #16a34a; }
+        .metric-card.card-far .metric-value { color: #dc2626; }
+        .metric-card.card-ttd .metric-value { color: #d97706; }
+        .metric-card.card-pi .metric-value { color: #7c3aed; }
+        .metric-desc {
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.4;
+        }
+        .matrix-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+        }
+        .matrix-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+            margin-top: 12px;
+        }
+        .matrix-item {
+            background: #fff;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        .matrix-num {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .matrix-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        .info-hint {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #166534;
+            line-height: 1.5;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -20,45 +177,90 @@
     </header>
 
     <main>
-        <section class="evaluation-section" style="background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-            <h2>Đánh Giá Hiệu Suất Thuật Toán California</h2>
-            <p id="evaluation-status" role="status" aria-live="polite">Đang tải kết quả đánh giá từ backend...</p>
-
-            <div class="evaluation-table" style="margin-top: 20px; overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                    <thead>
-                        <tr style="background: #1e293b; color: #fff;">
-                            <th style="padding: 12px; border: 1px solid #cbd5e1;">Chỉ Số (Metric)</th>
-                            <th style="padding: 12px; border: 1px solid #cbd5e1;">Giá Trị Từ Backend</th>
-                            <th style="padding: 12px; border: 1px solid #cbd5e1;">Ý Nghĩa & Diễn Giải</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold;">Detection Rate (DR)</td>
-                            <td id="evaluation-dr" style="padding: 12px; border: 1px solid #cbd5e1; color: #16a34a; font-weight: bold;">--</td>
-                            <td style="padding: 12px; border: 1px solid #cbd5e1;">Tỷ lệ phát hiện chính xác các sự cố xảy ra trên đoạn đường mẫu.</td>
-                        </tr>
-                        <tr style="background: #f8fafc;">
-                            <td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold;">False Alarm Rate (FAR)</td>
-                            <td id="evaluation-far" style="padding: 12px; border: 1px solid #cbd5e1; color: #dc2626; font-weight: bold;">--</td>
-                            <td style="padding: 12px; border: 1px solid #cbd5e1;">Tần suất hoặc tỷ lệ cảnh báo sai; ý nghĩa phụ thuộc định nghĩa FAR trong kết quả.</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 12px; border: 1px solid #cbd5e1; font-weight: bold;">Time to Detect (TTD)</td>
-                            <td id="evaluation-ttd" style="padding: 12px; border: 1px solid #cbd5e1; color: #d97706; font-weight: bold;">--</td>
-                            <td style="padding: 12px; border: 1px solid #cbd5e1;">Thời gian trung bình từ lúc sự cố phát sinh đến khi thuật toán phát hiện, theo đơn vị thời gian đã dùng khi đánh giá.</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="eval-container">
+            <div class="eval-header">
+                <h2>Đánh Giá Hiệu Suất Thuật Toán California</h2>
+                <p>Đo lường các chỉ số hiệu năng phát hiện sự cố giao thông (AID) theo từng kịch bản vận hành.</p>
             </div>
-        </section>
+
+            <!-- Bộ điều khiển kịch bản -->
+            <div class="eval-controls">
+                <label for="eval-scenario-select">Kịch bản kiểm tra:</label>
+                <select id="eval-scenario-select">
+                    <option value="incident">🚨 Có sự cố giao thông (Incident)</option>
+                    <option value="normal">🚗 Giao thông bình thường (Normal)</option>
+                    <option value="edge_congestion">🛑 Ùn tắc tự nhiên (Edge Congestion)</option>
+                </select>
+                <button id="btn-run-eval" class="btn-eval">▶ Đánh Giá Nhanh</button>
+                <span id="eval-status-msg" style="font-size: 13px; color: #475569;">Sẵn sàng.</span>
+            </div>
+
+            <!-- 4 Thẻ chỉ số chính -->
+            <div class="cards-grid">
+                <div class="metric-card card-dr">
+                    <div class="metric-title">Detection Rate (DR)</div>
+                    <div class="metric-value" id="card-dr-val">--</div>
+                    <div class="metric-desc">Tỷ lệ phát hiện đúng sự cố (Mục tiêu: 100%)</div>
+                </div>
+
+                <div class="metric-card card-far">
+                    <div class="metric-title">False Alarm Rate (FAR)</div>
+                    <div class="metric-value" id="card-far-val">--</div>
+                    <div class="metric-desc">Tỷ lệ báo động giả (Mục tiêu: 0.00%)</div>
+                </div>
+
+                <div class="metric-card card-ttd">
+                    <div class="metric-title">Time To Detect (TTD / MTTD)</div>
+                    <div class="metric-value" id="card-ttd-val">--</div>
+                    <div class="metric-desc">Thời gian trễ phát hiện trung bình</div>
+                </div>
+
+                <div class="metric-card card-pi">
+                    <div class="metric-title">Performance Index (PI)</div>
+                    <div class="metric-value" id="card-pi-val">--</div>
+                    <div class="metric-desc">Chỉ số hiệu năng tổng hợp (Càng thấp càng tối ưu)</div>
+                </div>
+            </div>
+
+            <!-- Bảng Thống Kê Chi Tiết Biến Cố -->
+            <div class="matrix-box">
+                <div class="matrix-title">Chi Tiết Biến Cố Mô Phỏng</div>
+                <div class="matrix-grid">
+                    <div class="matrix-item">
+                        <div class="matrix-num" id="stat-incidents" style="color: #2563eb;">--</div>
+                        <div class="matrix-label">Số sự cố thực tế</div>
+                    </div>
+                    <div class="matrix-item">
+                        <div class="matrix-num" id="stat-tp" style="color: #16a34a;">--</div>
+                        <div class="matrix-label">Phát hiện đúng (TP)</div>
+                    </div>
+                    <div class="matrix-item">
+                        <div class="matrix-num" id="stat-fn" style="color: #ef4444;">--</div>
+                        <div class="matrix-label">Bỏ sót (FN)</div>
+                    </div>
+                    <div class="matrix-item">
+                        <div class="matrix-num" id="stat-fp" style="color: #f97316;">--</div>
+                        <div class="matrix-label">Báo động giả (FP)</div>
+                    </div>
+                    <div class="matrix-item">
+                        <div class="matrix-num" id="stat-repeated" style="color: #64748b;">--</div>
+                        <div class="matrix-label">Cảnh báo lặp</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ghi chú ngắn gọn, súc tích -->
+            <div class="info-hint">
+                💡 <strong>Ghi chú:</strong> Ở kịch bản không có tai nạn (bình thường hoặc ùn tắc tự nhiên), chỉ số <strong>DR</strong> và <strong>MTTD</strong> hiển thị <em>N/A</em> (do không có sự cố thực tế để tính mẫu số), và chỉ số <strong>FAR đạt 0.00%</strong> chứng minh thuật toán không bị báo động giả.
+            </div>
+        </div>
     </main>
 
     <footer>
-        <p>&copy; 2026 Project ITS - Phát triển bởi Nhóm XM</p>
+        <p>&copy; 2026 Project ITS - Phát triển bởi Nhóm XM (Khoa - Cường - Mai - Khang - Hiếu)</p>
     </footer>
-    <script src="../assets/js/api-client.js"></script>
-    <script src="../assets/js/evaluation.js"></script>
+
+    <script src="../assets/js/api-client.js?v=20261028_05"></script>
+    <script src="../assets/js/evaluation.js?v=20261028_05"></script>
 </body>
 </html>

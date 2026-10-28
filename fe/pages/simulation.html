@@ -1,10 +1,188 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mô Phỏng - Hệ Thống ITSgrXM</title>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .sim-section {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+        }
+        .sim-controls {
+            margin: 20px 0;
+            padding: 15px 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .sim-controls label { font-weight: bold; color: #1e293b; }
+        .sim-controls select {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            font-size: 15px;
+            background: #fff;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .cycle-counter { font-size: 15px; color: #64748b; font-weight: 500; }
+        .cycle-counter span { font-weight: bold; color: #0f172a; }
+
+        /* Hai ô Occupancy */
+        .occ-panels { display: flex; gap: 20px; margin: 20px 0; }
+        .occ-panel {
+            flex: 1;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 6px;
+        }
+        .occ-panel.upstream { border-left: 4px solid #2563eb; }
+        .occ-panel.downstream { border-left: 4px solid #16a34a; }
+        .occ-panel h3 { font-size: 14px; color: #475569; }
+        .occ-panel .occ-val { font-size: 32px; margin-top: 10px; font-weight: bold; }
+        .occ-panel.upstream .occ-val { color: #2563eb; }
+        .occ-panel.downstream .occ-val { color: #16a34a; }
+
+        /* Status box */
+        .status-box {
+            padding: 15px;
+            background: #f1f5f9;
+            color: #475569;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .status-box.danger { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .status-box.success { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+        .status-box.warning { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+        .status-box.tentative { background: #fefce8; color: #a16207; border: 1px solid #fde68a; }
+
+        /* Buttons */
+        .controls { display: flex; gap: 10px; flex-wrap: wrap; }
+        .controls .btn { border: none; cursor: pointer; padding: 0.7rem 1.4rem; font-weight: 600; border-radius: 6px; }
+        .btn-start { background: #16a34a; }
+        .btn-pause { background: #d97706; }
+        .btn-check { background: #2563eb; }
+        .btn-reset { background: #dc2626; }
+
+        /* ===== BIỂU ĐỒ OCCUPANCY ===== */
+        .chart-section {
+            background: #fff;
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+        .chart-section h3 { font-size: 16px; color: #1e293b; margin-bottom: 6px; }
+        .chart-legend { display: flex; gap: 20px; margin: 10px 0 14px 0; font-size: 13px; }
+        .chart-legend span::before {
+            content: "";
+            display: inline-block;
+            width: 14px; height: 3px;
+            margin-right: 6px;
+            vertical-align: middle;
+            border-radius: 2px;
+        }
+        .legend-up::before { background: #2563eb; }
+        .legend-down::before { background: #16a34a; }
+        .legend-incident::before { background: #fecaca; width: 14px; height: 14px; border-radius: 2px; }
+        #occ-chart-container {
+            position: relative;
+            width: 100%;
+            height: 240px;
+            background: #fafbfc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        #occ-chart-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ===== BẢNG SOI 3 BƯỚC ===== */
+        .calc-section {
+            background: #fff;
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+        .calc-section h3 { font-size: 16px; color: #1e293b; margin-bottom: 14px; }
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 14px;
+        }
+        .calc-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .calc-card .calc-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+        }
+        .calc-card .calc-formula {
+            font-size: 13px;
+            color: #334155;
+            margin: 6px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .calc-card .calc-result {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+        .calc-card .calc-verdict {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+        .verdict-pass { background: #dcfce7; color: #166534; }
+        .verdict-fail { background: #fee2e2; color: #991b1b; }
+        .verdict-idle { background: #e2e8f0; color: #64748b; }
+
+        /* FSM state card */
+        .fsm-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 18px;
+            text-align: center;
+        }
+        .fsm-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; }
+        .fsm-state {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 8px 0 4px 0;
+            letter-spacing: 1px;
+        }
+        .fsm-state.state-normal { color: #16a34a; }
+        .fsm-state.state-tentative { color: #d97706; }
+        .fsm-state.state-incident { color: #dc2626; }
+        .fsm-desc { font-size: 12px; color: #64748b; }
+    </style>
 </head>
 <body>
     <header>
@@ -20,42 +198,109 @@
     </header>
 
     <main>
-        <section class="simulation-section" style="background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-            <h2>Mô Phỏng Thuật Toán California</h2>
-            <p>Theo dõi dữ liệu Occupancy mô phỏng từ backend giữa trạm thượng lưu (Upstream) và trạm hạ lưu (Downstream).</p>
+        <!-- ===== KHỐI ĐIỀU KHIỂN MÔ PHỎNG ===== -->
+        <div class="sim-section">
+            <h2>Mô Phỏng Thuật Toán California #1</h2>
+            <p style="color: #64748b; margin-top: 4px;">
+                Theo dõi dữ liệu Occupancy mô phỏng từ backend giữa trạm thượng lưu (Upstream) và trạm hạ lưu (Downstream).
+            </p>
 
-            <!-- Bảng hiển thị thông số -->
-            <div class="simulation-display" style="display: flex; gap: 20px; margin: 20px 0;">
-                <div style="flex: 1; background: #f8fafc; padding: 20px; border-radius: 6px; border-left: 4px solid #2563eb;">
-                    <h3>Trạm Thượng Lưu (Upstream)</h3>
-                    <p style="font-size: 20px; margin-top: 10px; font-weight: bold;" id="upstream-occ">--</p>
+            <div class="sim-controls">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label for="scenario-select">Kịch bản:</label>
+                    <select id="scenario-select">
+                        <option value="incident">🚨 Có sự cố giao thông (Tai nạn xảy ra giữa 2 trạm)</option>
+                        <option value="normal">🚗 Giao thông bình thường (Thông suốt, không sự cố)</option>
+                        <option value="edge_congestion">🛑 Ùn tắc tự nhiên (Giờ cao điểm, cả 2 trạm đông)</option>
+                    </select>
                 </div>
-                <div style="flex: 1; background: #f8fafc; padding: 20px; border-radius: 6px; border-left: 4px solid #16a34a;">
+                <div class="cycle-counter">
+                    Chu kỳ: <span id="current-cycle">0</span> / <span id="total-cycles">60</span>
+                </div>
+            </div>
+
+            <!-- Hai ô Occupancy -->
+            <div class="occ-panels">
+                <div class="occ-panel upstream">
+                    <h3>Trạm Thượng Lưu (Upstream)</h3>
+                    <p class="occ-val" id="upstream-occ">20.0%</p>
+                </div>
+                <div class="occ-panel downstream">
                     <h3>Trạm Hạ Lưu (Downstream)</h3>
-                    <p style="font-size: 20px; margin-top: 10px; font-weight: bold;" id="downstream-occ">--</p>
+                    <p class="occ-val" id="downstream-occ">20.0%</p>
                 </div>
             </div>
 
             <!-- Trạng thái cảnh báo -->
-            <div id="status-box" style="padding: 15px; background: #f1f5f9; color: #475569; border-radius: 6px; margin-bottom: 20px; font-weight: bold; text-align: center;">
-                Chưa có dữ liệu. Nhấn Bắt Đầu để tải mô phỏng từ backend.
+            <div id="status-box" class="status-box">
+                Sẵn sàng mô phỏng. Bấm nút [Bắt Đầu] để chạy luồng dữ liệu thời gian thực.
             </div>
 
             <!-- Các nút điều khiển -->
-            <div class="controls" style="display: flex; gap: 10px;">
-                <button id="start-btn" class="btn" style="background: #16a34a; border: none; cursor: pointer;">Bắt Đầu</button>
-                <button id="pause-btn" class="btn" style="background: #d97706; border: none; cursor: pointer;">Tạm Dừng</button>
-                <button id="check-btn" class="btn" style="background: #2563eb; border: none; cursor: pointer;">Kiểm Tra</button>
-                <button id="reset-btn" class="btn" style="background: #dc2626; border: none; cursor: pointer;">Đặt Lại</button>
+            <div class="controls">
+                <button id="start-btn" class="btn btn-start">▶ Bắt Đầu</button>
+                <button id="pause-btn" class="btn btn-pause">⏸ Tạm Dừng</button>
+                <button id="check-btn" class="btn btn-check">🔍 Kiểm Tra Backend</button>
+                <button id="reset-btn" class="btn btn-reset">↺ Đặt Lại</button>
             </div>
-        </section>
+        </div>
+
+        <!-- ===== BIỂU ĐỒ OCCUPANCY THỜI GIAN THỰC ===== -->
+        <div class="chart-section">
+            <h3>Biểu Đồ Occupancy Thời Gian Thực</h3>
+            <div class="chart-legend">
+                <span class="legend-up">OCC Thượng Lưu (Upstream)</span>
+                <span class="legend-down">OCC Hạ Lưu (Downstream)</span>
+                <span class="legend-incident">Vùng sự cố thực tế</span>
+            </div>
+            <div id="occ-chart-container">
+                <canvas id="occ-chart-canvas"></canvas>
+            </div>
+        </div>
+
+        <!-- ===== BẢNG KIỂM TRA ĐIỀU KIỆN NGƯỠNG ===== -->
+        <div class="calc-section">
+            <h3>Chi Tiết Các Phép Kiểm Tra Ngưỡng (Thuật Toán California #1)</h3>
+            <div class="calc-grid">
+                <div class="calc-card" id="calc-step1">
+                    <div class="calc-label">Bước 1: Chênh lệch tuyệt đối (T₁ = 20)</div>
+                    <div class="calc-formula">OCCDIFF = OCC<sub>up</sub> − OCC<sub>down</sub></div>
+                    <div>
+                        <span class="calc-result" id="calc-diff-val">0.0%</span>
+                        <span class="calc-verdict verdict-idle" id="calc-diff-verdict">Chờ chạy...</span>
+                    </div>
+                </div>
+                <div class="calc-card" id="calc-step2">
+                    <div class="calc-label">Bước 2: Tỷ lệ theo Thượng lưu (T₂ = 0.25)</div>
+                    <div class="calc-formula">OCCRDF = OCCDIFF / OCC<sub>up</sub></div>
+                    <div>
+                        <span class="calc-result" id="calc-rdf-val">0.000</span>
+                        <span class="calc-verdict verdict-idle" id="calc-rdf-verdict">Chờ chạy...</span>
+                    </div>
+                </div>
+                <div class="calc-card" id="calc-step3">
+                    <div class="calc-label">Bước 3: Tỷ lệ theo Hạ lưu (T₃ = 0.50)</div>
+                    <div class="calc-formula">DOCD = OCCDIFF / OCC<sub>down</sub></div>
+                    <div>
+                        <span class="calc-result" id="calc-docd-val">0.000</span>
+                        <span class="calc-verdict verdict-idle" id="calc-docd-verdict">Chờ chạy...</span>
+                    </div>
+                </div>
+                <div class="fsm-card">
+                    <div class="fsm-label">Trạng Thái Máy Trạng Thái (FSM)</div>
+                    <div class="fsm-state state-normal" id="fsm-state-val">NORMAL</div>
+                    <div class="fsm-desc" id="fsm-state-desc">Giao thông bình thường. Đang chờ bắt đầu mô phỏng...</div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>
-        <p>&copy; 2026 Project ITS - Phát triển bởi Nhóm XM</p>
+        <p>&copy; 2026 Project ITS - Phát triển bởi Nhóm XM (Khoa - Cường - Mai - Khang - Hiếu)</p>
     </footer>
 
-    <script src="../assets/js/api-client.js"></script>
-    <script src="../assets/js/app.js"></script>
+    <!-- Cache-busting query parameter v=20261028_02 -->
+    <script src="../assets/js/api-client.js?v=20261028_02"></script>
+    <script src="../assets/js/app.js?v=20261028_02"></script>
 </body>
 </html>
