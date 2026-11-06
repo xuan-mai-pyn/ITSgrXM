@@ -1,9 +1,4 @@
-DỰ ÁN ITSgrXM - DEMO THUẬT TOÁN CALIFORNIA
-TÀI LIỆU PHÂN CÔNG FILE, YÊU CẦU VÀ LUỒNG CÔNG VIỆC
-
-============================================================
 1. MỤC TIÊU DỰ ÁN
-============================================================
 
 Xây dựng chương trình Python chạy trên Terminal để mô phỏng dữ liệu giao thông, sử dụng thuật toán California để phát hiện sự cố giao thông và đánh giá hiệu quả phát hiện.
 
@@ -18,9 +13,7 @@ Bổ sung phạm vi frontend:
 - Frontend dùng dữ liệu mẫu được khai báo rõ ràng, chưa kết nối backend và không trình bày dữ liệu minh họa như kết quả thực nghiệm.
 - Nội dung "Chưa xây dựng giao diện frontend" ở trên mô tả phạm vi ban đầu; phần bổ sung này cập nhật nhiệm vụ frontend cho Người 1.
 
-============================================================
 2. PHÂN CÔNG CHO 5 NGƯỜI
-============================================================
 
 NGƯỜI 1 - THUẬT TOÁN CALIFORNIA ( Khang )
 File chính:
@@ -136,9 +129,7 @@ Yêu cầu cần đạt:
 - Không viết test chỉ để luôn thành công; kết quả mong đợi phải dựa trên logic và tài liệu đã thống nhất.
 - docs/algorithm.md mô tả đúng các bước, ngưỡng và điều kiện xác nhận theo nguồn đã chọn.
 
-============================================================
 3. CÁC FILE VÀ THƯ MỤC DÙNG CHUNG
-============================================================
 
 requirements.txt
 - Phụ trách: Người 4 kiểm tra và cập nhật khi cần; cả nhóm báo nếu thêm thư viện.
@@ -156,9 +147,7 @@ data/
 - Phụ trách: Người 2.
 - Yêu cầu: Lưu dữ liệu mẫu/mô phỏng nếu nhóm quyết định lưu thành file. Không đưa dữ liệu lớn hoặc không rõ nguồn lên repository.
 
-============================================================
 4. CÂY THƯ MỤC VÀ NGƯỜI PHỤ TRÁCH
-============================================================
 
 ITSgrXM/
 |-- README.md                 (Người 4: hướng dẫn cài đặt và chạy)
@@ -202,9 +191,7 @@ Bổ sung thư mục frontend do Người 1 phụ trách:
 |       |-- simulation.html        (Người 1: trang mô phỏng dữ liệu mẫu)
 |       `-- evaluation.html        (Người 1: trang chỉ số đánh giá mẫu)
 
-============================================================
 5. LUỒNG DỮ LIỆU VÀ LUỒNG CÔNG VIỆC
-============================================================
 
 LUỒNG DỮ LIỆU CHÍNH:
 1. simulator.py tạo dữ liệu giao thông theo chu kỳ.
@@ -239,9 +226,7 @@ main.py (Người 4) điều phối và hiển thị kết quả
 test_california.py (Người 5) kiểm tra california.py độc lập.
 Sau đó cả nhóm kiểm thử luồng tích hợp từ đầu đến cuối.
 
-============================================================
 6. NHỮNG THỐNG NHẤT PHẢI CÓ TRƯỚC KHI CODE
-============================================================
 
 1. Định dạng dữ liệu:
    - Tên trường và đơn vị của các giá trị quan trắc.
@@ -264,9 +249,7 @@ Sau đó cả nhóm kiểm thử luồng tích hợp từ đầu đến cuối.
    - Xác minh các ngưỡng, điều kiện so sánh và xác nhận sự cố từ tài liệu môn học.
    - Không tự suy đoán hoặc thay đổi thuật toán nếu chưa thống nhất.
 
-============================================================
 7. QUY ƯỚC LÀM VIỆC
-============================================================
 
 - Mỗi người ưu tiên sửa các file được giao.
 - Nếu cần sửa file của người khác, hãy trao đổi trước.
@@ -282,9 +265,7 @@ Sau đó cả nhóm kiểm thử luồng tích hợp từ đầu đến cuối.
 - Không ghi kết quả đánh giá chưa chạy thực tế.
 - Người 4 điều phối tích hợp, nhưng mỗi người vẫn chịu trách nhiệm sửa lỗi trong module của mình.
 
-============================================================
 8. TIÊU CHÍ HOÀN THÀNH DỰ ÁN
-============================================================
 
 Dự án được xem là hoàn thành khi:
 - Các module sử dụng cùng định dạng dữ liệu và giao diện hàm.
@@ -295,3 +276,7 @@ Dự án được xem là hoàn thành khi:
 - Có kiểm thử với kết quả mong đợi rõ ràng.
 - Tài liệu mô tả đúng code thực tế và không ghi kết quả giả định như kết quả thực nghiệm.
 - Repository GitHub không chứa môi trường ảo hoặc file bí mật.
+fastapi
+uvicorn[standard]
+pytest
+httpx
