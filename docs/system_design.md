@@ -152,8 +152,6 @@ python -m src.simulator
 # Chạy kiểm thử
 python -m pytest -v
 ```
-<<<<<<< HEAD
-=======
 
 
->>>>>>> origin/test-full
+
