@@ -1,34 +1,159 @@
 # Thiết kế hệ thống
 
-## Phạm vi
-
-Đây là chương trình Python chạy cục bộ từ Terminal, phục vụ demo và học tập. Không có Frontend, Backend/API server riêng hoặc giao diện web. Thiết kế giữ ở mức các mô-đun Python nhỏ, chưa bổ sung kiến trúc triển khai phức tạp.
-
-## Luồng xử lý dự kiến
+## Kiến trúc & Luồng dữ liệu
 
 ```text
-Dữ liệu giao thông
-    → Đọc dữ liệu
-    → Kiểm tra dữ liệu
-    → Thuật toán California
-    → Xác định trạng thái giao thông
-    → Xuất kết quả
-    → Đánh giá hiệu quả phát hiện
+                        ┌─────────────────────────────┐
+                        │   main.py    │
+                        │   Điều phối & hiển thị      │
+                        └─────────────────────────────┘
+                                      │
+          ┌───────────────────────────┼───────────────────────────┐
+          │                           │                           │
+          ▼                           ▼                           ▼
+  ┌──────────────┐          ┌──────────────────┐        ┌──────────────┐
+  │ simulator.py │          │  california.py   │        │  metrics.py  │
+  │              │          │                  │        │             │
+  └──────────────┘          └──────────────────┘        └──────────────┘
+         │                       │        ▲                      │
+         │  occ_up, occ_down     │        │ kiểm thử độc lập     │
+         │ ──────────────────────▶        │                      │
+         │                       │  ┌─────────────────┐         │
+         │                       │  │ test_california  │         │
+         │                       │  │                 │         │
+         │                       │  └─────────────────┘         │
+         │                       │  kết quả phát hiện           │
+         │                       └──────────────────────────────▶│
+         │                                                        │
+         │  nhãn incident (ground truth)                         │
+         │ ──────────────────────────────────────────────────────▶│
+         │                                                        │
+         │                                              DR, FAR, TTD
 ```
 
-Luồng trên là mục tiêu thiết kế; hiện chưa có mô-đun đọc/kiểm tra dữ liệu, thuật toán, đầu ra kết quả hay đánh giá được triển khai.
+---
 
-## Trách nhiệm các thành phần
+## Lớp REST API
 
-- `src/main.py`: điểm vào dòng lệnh; điều phối luồng xử lý khi các thành phần được xây dựng.
-- `src/california.py`: chứa quy tắc phát hiện California sau khi công thức và thứ tự điều kiện được xác minh.
-- `src/simulator.py`: dành cho tạo chuỗi mô phỏng có đặc tả rõ ràng; không thay thế dữ liệu thực tế và hiện chưa tạo mẫu.
-- `src/metrics.py`: tính các chỉ số đánh giá từ kết quả phát hiện và nhãn tham chiếu khi định nghĩa đã được thống nhất.
-- `data/`: lưu trữ có tổ chức dữ liệu đầu vào/kiểm thử và tài liệu nguồn gốc; hiện chưa có dữ liệu.
-- `tests/`: chứa kiểm thử thuật toán và xử lý dữ liệu; kiểm thử hiện tại được bỏ qua cho đến khi có mã và đặc tả.
+`src/api.py` cung cấp HTTP API độc lập, không biến `src/main.py` thành server:
 
-## Cách chạy và ranh giới mô-đun
+```text
+HTTP client → src.api → simulator → CaliforniaAlgorithm → metrics
+                └──────────────────────────────→ JSON response
+```
 
-Điểm vào dự kiến là `python -m src.main` từ thư mục gốc. `main.py` sẽ đọc/chuẩn bị dữ liệu, gọi phần kiểm tra đầu vào, chuyển dữ liệu hợp lệ cho `california.py`, rồi chuyển kết quả và nhãn tham chiếu cho phần xuất kết quả/đánh giá. Chi tiết giao tiếp giữa mô-đun cần được chốt cùng định dạng dữ liệu và đặc tả thuật toán.
+- `GET /api/health`: trạng thái dịch vụ.
+- `POST /api/simulations`: tạo một kịch bản đã hỗ trợ, chạy California trên
+  từng bản ghi, rồi dùng nhãn mô phỏng và mốc cảnh báo để tính metrics.
+- `POST /api/evaluations`: nhận các khoảng sự cố và thời điểm cảnh báo, gọi
+  `metrics.summarize`.
+- `GET /api/dashboard`: trả tóm tắt kết quả API gần nhất trong bộ nhớ tiến trình.
 
-Hiện tại chỉ có thông báo khung từ `main.py`; những bước còn lại chưa được triển khai. Không có tiến trình server chạy nền hoặc API cần khởi động.
+API không dùng database. Dashboard không có dữ liệu trước khi có request mô
+phỏng/đánh giá thành công; dữ liệu trong bộ nhớ mất khi tiến trình kết thúc và
+không được chia sẻ giữa nhiều worker. CORS mặc định chỉ cho phép origin
+`localhost`/`127.0.0.1` khi phát triển; có thể cấu hình thêm bằng
+`ITS_ALLOWED_ORIGINS`. Chi tiết schema, ví dụ và lệnh chạy nằm trong
+[`docs/api.md`](api.md).
+
+---
+
+## Trách nhiệm từng module
+
+### `simulator.py`
+Tạo dữ liệu occupancy mô phỏng cho 3 kịch bản:
+
+| Kịch bản | Hàm gọi | Mô tả |
+|---|---|---|
+| Bình thường | `generate_normal()` | OCC cả 2 trạm ≈ 20%, không sự cố |
+| Có sự cố | `generate_incident()` | OCC_up tăng, OCC_down giảm đột ngột |
+| Ùn tắc tự nhiên | `generate_edge_case()` | OCC cả 2 trạm đều tăng (không phải sự cố) |
+
+Cách lấy dữ liệu:
+```python
+from src.simulator import generate_incident
+
+result = generate_incident()
+for rec in result.records:
+    rec.occ_up      # → dùng để chạy thuật toán
+    rec.occ_down    # → dùng để chạy thuật toán
+    rec.incident    # → dùng để chấm điểm (True/False)
+```
+
+---
+
+### `california.py`
+Nhận `occ_up`, `occ_down` từng chu kỳ, áp dụng thuật toán California, trả về kết quả phát hiện.
+
+**Cần cung cấp cho nhóm:**
+- Tên hàm phát hiện và cách gọi.
+- Định dạng kết quả trả về tại mỗi chu kỳ (ví dụ: `True/False` hoặc trạng thái `"normal"/"incident"`).
+
+---
+
+### `metrics.py`
+Nhận kết quả phát hiện từ `california.py` và nhãn thực tế `rec.incident` từ `simulator.py`, tính các chỉ số:
+
+| Chỉ số | Ý nghĩa |
+|---|---|
+| DR (Detection Rate) | Tỷ lệ sự cố được phát hiện đúng |
+| FAR (False Alarm Rate) | Tỷ lệ báo động sai khi không có sự cố |
+| TTD (Time to Detection) | Thời gian từ lúc sự cố xảy ra đến lúc phát hiện |
+
+---
+
+### `main.py`
+Gọi các module theo đúng thứ tự và hiển thị kết quả ra Terminal:
+```
+simulator → california → metrics → in kết quả
+```
+
+---
+
+### `tests/test_california.py`
+Kiểm thử độc lập thuật toán California, đảm bảo kết quả đúng trước khi tích hợp vào chương trình chính.
+
+**Cần kiểm thử:**
+
+| Trường hợp | Dữ liệu đầu vào | Kết quả mong đợi |
+|---|---|---|
+| Bình thường | OCC_up ≈ OCC_down ≈ 20% | Không phát hiện sự cố |
+| Có sự cố | OCC_up ≈ 55%, OCC_down ≈ 8% | Phát hiện sự cố |
+| Ùn tắc tự nhiên | OCC_up ≈ OCC_down ≈ 45% | Không phát hiện sự cố |
+
+Có thể lấy dữ liệu trực tiếp từ `simulator.py`:
+```python
+from src.simulator import generate_normal, generate_incident, generate_edge_case
+```
+
+---
+
+## Quy ước dữ liệu chung
+
+| Thuộc tính | Quy ước |
+|---|---|
+| Đơn vị OCC | Phần trăm (%), giá trị 0–100 |
+| Chu kỳ lấy mẫu | 30 giây |
+| Đồng bộ thời gian | Hai trạm dùng chung `timestamp` |
+| Nhãn sự cố | `True`/`False` (Python), `1`/`0` (CSV) |
+| Seed | Cố định theo từng kịch bản — tái tạo được cùng dữ liệu |
+
+---
+
+## Cách chạy
+
+```bash
+# Chạy toàn bộ chương trình
+python -m src.main
+
+# Tạo lại dữ liệu mô phỏng
+python -m src.simulator
+
+# Chạy kiểm thử
+python -m pytest -v
+```
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/test-full
