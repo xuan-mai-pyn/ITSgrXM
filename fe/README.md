@@ -1,6 +1,6 @@
 # ITSgrXM Frontend
 
-Frontend demo phát hiện sự cố giao thông bằng thuật toán California. Thành viên phụ trách chính: Cường ......
+Frontend demo phát hiện sự cố giao thông bằng thuật toán California. Thành viên phụ trách: Khang.
 
 ## Chạy frontend
 
@@ -14,7 +14,7 @@ Frontend tự thử API trên cổng `8000`, sau đó `8001` nếu cổng mặc 
 khả dụng. Nếu `8000` đang bị chiếm, có thể chạy backend bằng
 `python -m uvicorn src.api:app --reload --port 8001`.
 
-## Cấu trúc frontend
+## Cấu trúc
 
 ```text
 fe/
@@ -44,5 +44,3 @@ Backend chỉ lưu kết quả trong bộ nhớ tiến trình, nên dữ liệu 
 khởi động lại. Dữ liệu mô phỏng là dữ liệu tổng hợp, không phải dữ liệu giao
 thông thực tế. `charts.js` là mã minh họa cũ, không được các trang hiện tại
 nạp.
-
-<!-- test-git-change -->
