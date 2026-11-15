@@ -23,12 +23,57 @@
         <section class="hero">
             <h2>Hệ Thống Phát Hiện Sự Cố Giao Thông California</h2>
             <p>Ứng dụng thuật toán California nhằm phân tích chênh lệch Occupancy giữa trạm thượng lưu và hạ lưu để phát hiện sự cố nhanh chóng.</p>
-            <a href="pages/simulation.html" class="btn">Chạy Mô Phỏng Ngay</a>
+            <div style="margin-top: 16px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <a href="pages/simulation.html" class="btn">Chạy Mô Phỏng Ngay</a>
+                <a href="pages/dashboard.html" class="btn">Xem Dashboard</a>
+            </div>
+            <p id="systemStatus" style="margin-top: 14px; font-size: 0.9rem; font-weight: 600;">
+                Trạng thái API: Đang kiểm tra kết nối...
+            </p>
+        </section>
+
+        <section class="features" style="max-width: 1000px; margin: 24px auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; padding: 0 16px;">
+            <div class="card">
+                <h3>Giám Sát Trực Quan</h3>
+                <p>Theo dõi lưu lượng phương tiện và cảnh báo sự cố theo thời gian thực tại các trạm đo.</p>
+                <a href="pages/dashboard.html">Truy cập Dashboard &rarr;</a>
+            </div>
+            <div class="card">
+                <h3>Mô Phỏng Thuật Toán</h3>
+                <p>Kiểm thử các kịch bản tắc nghẽn và sự cố dựa trên thông số Occupancy thượng lưu / hạ lưu.</p>
+                <a href="pages/simulation.html">Mở trang Mô Phỏng &rarr;</a>
+            </div>
+            <div class="card">
+                <h3>Đánh Giá Hiệu Năng</h3>
+                <p>Thống kê độ chính xác, tỷ lệ phát hiện đúng và độ trễ cảnh báo của mô hình.</p>
+                <a href="pages/evaluation.html">Xem báo cáo Đánh Giá &rarr;</a>
+            </div>
         </section>
     </main>
 
     <footer>
         <p>&copy; 2026 Project ITS - Phát triển bởi Nhóm XM</p>
     </footer>
+
+    <script src="assets/js/api-client.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+        async function checkApiStatus() {
+            const statusEl = document.getElementById("systemStatus");
+            for (const port of [8000, 8001]) {
+                try {
+                    const res = await fetch(`http://localhost:${port}/api/dashboard`);
+                    if (res.ok || res.status === 404) {
+                        statusEl.textContent = `Trạng thái API: Đã kết nối (Cổng ${port})`;
+                        statusEl.style.color = "#16a34a";
+                        return;
+                    }
+                } catch (e) {}
+            }
+            statusEl.textContent = "Trạng thái API: Chưa kết nối Backend";
+            statusEl.style.color = "#dc2626";
+        }
+        checkApiStatus();
+    </script>
 </body>
 </html>
